@@ -17,8 +17,8 @@
 | FP8 PLE repack | [gorbatjovy checkpoint](https://huggingface.co/gorbatjovy/qwen3.8-flash-next-abliterated-NVFP4-plefp8) |
 | Inference runtime and underlying kernels | [vLLM](https://github.com/vllm-project/vllm), [FlashInfer](https://github.com/flashinfer-ai/flashinfer), [PyTorch](https://github.com/pytorch/pytorch), NVIDIA CUDA |
 
-Local contributions: assembling pinned sources, the GDN selector adaptation, logging-only allocation diagnostics, persistent-cache deployment, the K2/K3 comparison and publication helpers. The underlying kernel and recipe authors retain credit.
+Local contributions: assembling pinned sources, the GDN selector adaptation, logging-only allocation diagnostics, persistent-cache deployment, the comparison of drafting two versus three tokens ahead, and publication helpers. The underlying kernel and recipe authors retain credit.
 
-Related but not deployed: [Eugr](https://github.com/eugr/spark-vllm-docker) and [B12X](https://github.com/local-inference-lab/b12x) supplied the Block C candidate, which failed startup. Nanetnounou's optional FP8-KV work is credited by upstream but is not enabled in this BF16-KV recipe. The reduced-vocabulary patch exists in the image and is disabled.
+Related but not deployed: [Eugr](https://github.com/eugr/spark-vllm-docker) and [B12X](https://github.com/local-inference-lab/b12x) supplied the alternative serving stack we tried; that candidate failed startup before any inference benchmark. Nanetnounou's optional FP8-KV work is credited by upstream but is not enabled in this BF16-KV recipe. The reduced-vocabulary patch exists in the image and is disabled.
 
 License notices in `upstream/LICENSE` and source headers are preserved. No MiaAI source is newly copied into this bundle; the deployed mmap implementation is the Blazux implementation. Checkpoint redistribution remains subject to the checkpoint/base-model licenses rather than the serving-code license.
