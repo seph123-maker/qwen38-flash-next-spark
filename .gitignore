@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+model-cache/
+compile-cache/
+.env
+*.private.json

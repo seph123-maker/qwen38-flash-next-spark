@@ -1,0 +1,102 @@
+[
+  {
+    "id": "code-clamp",
+    "baseline_pass": true,
+    "candidate_pass": true,
+    "baseline_s": 7.405346045998158,
+    "candidate_s": 9.908607885998208,
+    "baseline_preemptions": 0.0,
+    "candidate_preemptions": 0.0,
+    "latency_comparable": true
+  },
+  {
+    "id": "code-dedupe",
+    "baseline_pass": true,
+    "candidate_pass": true,
+    "baseline_s": 2.994485404007719,
+    "candidate_s": 4.14736262599763,
+    "baseline_preemptions": 0.0,
+    "candidate_preemptions": 0.0,
+    "latency_comparable": false
+  },
+  {
+    "id": "tools-read",
+    "baseline_pass": true,
+    "candidate_pass": true,
+    "baseline_s": 8.745531068998389,
+    "candidate_s": 8.696935528001632,
+    "baseline_preemptions": 0.0,
+    "candidate_preemptions": 0.0,
+    "latency_comparable": true
+  },
+  {
+    "id": "tools-search",
+    "baseline_pass": true,
+    "candidate_pass": true,
+    "baseline_s": 8.68714642598934,
+    "candidate_s": 8.783430082010454,
+    "baseline_preemptions": 0.0,
+    "candidate_preemptions": 0.0,
+    "latency_comparable": true
+  },
+  {
+    "id": "thai-glossary",
+    "baseline_pass": true,
+    "candidate_pass": true,
+    "baseline_s": 10.276890417997492,
+    "candidate_s": 10.322904055006802,
+    "baseline_preemptions": 0.0,
+    "candidate_preemptions": 0.0,
+    "latency_comparable": true
+  },
+  {
+    "id": "thai-records",
+    "baseline_pass": true,
+    "candidate_pass": true,
+    "baseline_s": 10.324412272995687,
+    "candidate_s": 10.64110354699369,
+    "baseline_preemptions": 0.0,
+    "candidate_preemptions": 0.0,
+    "latency_comparable": true
+  },
+  {
+    "id": "reason-thinking-arithmetic",
+    "baseline_pass": true,
+    "candidate_pass": true,
+    "baseline_s": 1.8724431449954864,
+    "candidate_s": 2.2678580219944706,
+    "baseline_preemptions": 0.0,
+    "candidate_preemptions": 0.0,
+    "latency_comparable": true
+  },
+  {
+    "id": "reason-thinking-logic",
+    "baseline_pass": true,
+    "candidate_pass": true,
+    "baseline_s": 3.250209484001971,
+    "candidate_s": 3.7251842230034526,
+    "baseline_preemptions": 0.0,
+    "candidate_preemptions": 0.0,
+    "latency_comparable": true
+  },
+  {
+    "id": "long-32k",
+    "baseline_pass": true,
+    "candidate_pass": true,
+    "baseline_s": 22.46302064700285,
+    "candidate_s": 22.82240651900065,
+    "baseline_preemptions": 0.0,
+    "candidate_preemptions": 0.0,
+    "latency_comparable": true
+  },
+  {
+    "id": "long-483k",
+    "baseline_pass": true,
+    "candidate_pass": true,
+    "baseline_s": 336.11262727600115,
+    "candidate_s": 319.1761257140024,
+    "baseline_preemptions": 1.0,
+    "candidate_preemptions": 1.0,
+    "latency_comparable": true
+  }
+]

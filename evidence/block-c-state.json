@@ -1,0 +1,9 @@
+{
+  "phase": "restored-production",
+  "done": true,
+  "started": 1789437309.583049,
+  "original_id": "4cb10b7b7232a6315ac14edbe2a92394cc2e8bf0c081c5dbdd5ccaf8135654d4",
+  "candidate_id": "a337706b085f0bd199ba740ac13d7082e7fff387ca46c3abc40e960279213650",
+  "error": "AssertionError('Container exited')",
+  "finished": 1789438099.9366431
+}
