@@ -13,7 +13,7 @@
 | GDN SM12x compatibility change ported locally | [vLLM PR 55715](https://github.com/vllm-project/vllm/pull/55715) |
 | Optional NVIDIA block-FP8 MTP loader backport in image | [techfury90, vLLM PR 55513](https://github.com/vllm-project/vllm/pull/55513); not the current BF16 drafter's format |
 | Base model | [Qwen](https://huggingface.co/Qwen) |
-| Abliteration and NVFP4 checkpoint lineage | [windowsxp811203](https://huggingface.co/windowsxp811203); see current checkpoint's model card for exact parent links |
+| Abliteration and NVFP4 checkpoint lineage | [windowsxp811203/Qwen3.8-Flash-Next-Abliterated-NVFP4](https://huggingface.co/windowsxp811203/Qwen3.8-Flash-Next-Abliterated-NVFP4), named as the parent in the [pinned Gorbatjovy card](https://huggingface.co/gorbatjovy/qwen3.8-flash-next-abliterated-NVFP4-plefp8/blob/2065365912e46b205c64a70ac5b85b4869674d31/README.md) |
 | FP8 PLE repack | [gorbatjovy checkpoint](https://huggingface.co/gorbatjovy/qwen3.8-flash-next-abliterated-NVFP4-plefp8) |
 | Inference runtime and underlying kernels | [vLLM](https://github.com/vllm-project/vllm), [FlashInfer](https://github.com/flashinfer-ai/flashinfer), [PyTorch](https://github.com/pytorch/pytorch), NVIDIA CUDA |
 
