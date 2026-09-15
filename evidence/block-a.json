@@ -40,7 +40,7 @@
     "latency_comparable": true
   },
   {
-    "id": "thai-glossary",
+      "id": "unicode-glossary",
     "baseline_pass": true,
     "candidate_pass": true,
     "baseline_s": 10.276890417997492,
@@ -50,7 +50,7 @@
     "latency_comparable": true
   },
   {
-    "id": "thai-records",
+      "id": "unicode-records",
     "baseline_pass": true,
     "candidate_pass": true,
     "baseline_s": 10.324412272995687,

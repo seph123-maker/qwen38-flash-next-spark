@@ -1,6 +1,6 @@
 # Qwen3.8-Flash-Next on one DGX Spark
 
-A tested configuration for running an **abliterated Qwen3.8-Flash-Next model on one GB10 system**, intended for one person's code, tool-calling, Thai-language and long-document assistant work.
+A community serving recipe for running an **abliterated Qwen3.8-Flash-Next model on one GB10 system**, with tests covering code, tool calling, Unicode text and long-document retrieval.
 
 This combines **[Blazux's serving recipe](https://github.com/blazux/qwen3.8-Flash-DGX)** with **[gorbatjovy's abliterated checkpoint](https://huggingface.co/gorbatjovy/qwen3.8-flash-next-abliterated-NVFP4-plefp8)**, additional FP8 conversion and our selected settings. Blazux supplies the serving foundation; the abliterated weights come from a separate model lineage. [Authors and credits](CREDITS.md) · [Exact sources and lineage](docs/SOURCES.md).
 

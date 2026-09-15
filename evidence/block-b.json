@@ -78,7 +78,7 @@
   {
     "pair": 1,
     "pass": 1,
-    "category": "thai_unicode",
+    "category": "unicode",
     "k2_tps": 44.337956494222276,
     "k3_tps": 46.73448678325646,
     "gain": 0.05405143760620712,
@@ -192,7 +192,7 @@
   {
     "pair": 1,
     "pass": 2,
-    "category": "thai_unicode",
+    "category": "unicode",
     "k2_tps": 45.01633437066276,
     "k3_tps": 49.770623753978995,
     "gain": 0.10561253931005576,

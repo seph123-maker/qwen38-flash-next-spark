@@ -22,7 +22,7 @@ The model can propose several possible next tokens and verify them together. Thi
 
 Drafting further ahead can save time when the proposals are accepted. It can also waste work when they are rejected, so the larger number is not automatically better.
 
-We ran the same eight prompts twice with each setting: two code tasks, two tool-call tasks, two Thai tasks, one arithmetic task and one retrieval task with about 32,000 input tokens. Temperature was zero and the seed was fixed. Prompts, responses, timing counters and scripted grades were saved to files.
+We ran the same eight prompts twice with each setting: two code tasks, two tool-call tasks, two non-English Unicode tasks, one arithmetic task and one retrieval task with about 32,000 input tokens. Temperature was zero and the seed was fixed. Prompts, responses, timing counters and scripted grades were saved to files. The language tasks are test inputs, not language-specific serving settings; two tasks do not establish broad multilingual quality.
 
 | Measurement | Draft two ahead | Draft three ahead |
 |---|---:|---:|
@@ -67,6 +67,8 @@ Output-generation rates above are estimates from server counters: total completi
 The two-token baseline used an already-running server; the three-token setting used a different start. In the second arithmetic pass, first-position draft acceptance fell from 100% to 88.9%. That sample is too small to establish a general quality regression, but it exceeded the original 10-percentage-point acceptance guard. A dedicated repeated-prefix check has not been rerun with three-token drafting; the earlier check passed during the runtime comparison with two-token drafting.
 
 These filenames retain the original experiment identifiers so the evidence stays traceable:
+
+Public evidence summaries use neutral `unicode` labels for the language-test identifiers and category. Only those labels were renamed; measurements and results are unchanged. Original labels remain in the local experiment records.
 
 | Evidence file | Contents |
 |---|---|
