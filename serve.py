@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Launch the published configuration; refuses to replace an existing container."""
 import argparse,json,pathlib,subprocess,shlex
+from effort_alias import prepare
 
 def command(args):
     p=json.loads((pathlib.Path(__file__).parent/'production.json').read_text())
@@ -12,6 +13,8 @@ def command(args):
          '--tmpfs','/tmp/vllm-prometheus:rw,size=256m']
     for k,v in p['environment'].items():cmd+=['-e',k+'='+v]
     for n in ['vllm','flashinfer']:cmd+=['-v',f'{cache/n}:/root/.cache/{n}']
+    template=cache/'chat-templates'/'effort-alias.jinja'
+    cmd+=['-v',f'{template}:/qwen38/chat_template.jinja:ro']
     # Docker accepts one entrypoint executable; preserve the remaining argv.
     cmd+=['--entrypoint',p['entrypoint'][0],args.image]+p['entrypoint'][1:]+p['command']
     return p,hf,cache,cmd
@@ -31,6 +34,7 @@ def main():
     model=hf/pathlib.Path(p['command'][0]).relative_to('/hf')
     if not (model/'config.json').is_file():raise SystemExit('Prepared pinned model missing: '+str(model))
     for n in ['vllm','flashinfer']:(cache/n).mkdir(parents=True,exist_ok=True)
+    prepare(model,cache/'chat-templates'/'effort-alias.jinja')
     subprocess.run(cmd,check=True)
     print('Started loading. Check /health before sending inference requests.')
 

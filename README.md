@@ -2,6 +2,8 @@
 
 A community serving recipe for running an **abliterated Qwen3.8-Flash-Next model on one GB10 system**, with tests covering code, tool calling, Unicode text and long-document retrieval.
 
+The launcher also adapts Blazux's reasoning-effort compatibility fix: clients can send `high` or `max` (mapped to `xhigh`) and `minimal` (mapped to `low`). This is an API compatibility change, with no claimed speed improvement. See [credits](CREDITS.md).
+
 This combines **[Blazux's serving recipe](https://github.com/blazux/qwen3.8-Flash-DGX)** with **[gorbatjovy's abliterated checkpoint](https://huggingface.co/gorbatjovy/qwen3.8-flash-next-abliterated-NVFP4-plefp8)**, additional FP8 conversion and our selected settings. Blazux supplies the serving foundation; the abliterated weights come from a separate model lineage. [Authors and credits](CREDITS.md) · [Exact sources and lineage](docs/SOURCES.md).
 
 **Recorded configuration: September 15, 2026.** This is a dated, pinned recipe, not a promise to track the newest upstream defaults.

@@ -1,0 +1,11 @@
+{
+  "before_high": 400,
+  "before_xhigh": 200,
+  "after_low": 200,
+  "after_medium": 200,
+  "after_xhigh": 200,
+  "after_high": 200,
+  "after_max": 200,
+  "after_minimal": 200,
+  "status": "upgraded"
+}

@@ -23,6 +23,7 @@ The table below keeps the software's actual option names, with a plain-language 
 | GDN | SM12x FlashInfer selector compatibility patch | Compatibility update for this GPU family |
 | Sampling | FlashInfer sampler on; FlashInfer autotuning off; DeepGemm off | Retained |
 | Tools / reasoning | `qwen3_coder`, `qwen3`; auto tool choice on | Retained |
+| Reasoning-effort compatibility | `high` / `max` → `xhigh`; `minimal` → `low` | Launcher generates a template copy under the writable compilation-cache directory and mounts it read-only; original checkpoint template stays intact |
 | API | OpenAI-compatible `/v1`; served name `qwen3.8-flash-next` | Port 8000 by default |
 
 [`production.json`](../production.json) contains the full exported argument list, graph splitting operators, environment variables and container settings. [`serve.py`](../serve.py) uses that export to launch the server. Private hostnames, credentials and original user filesystem paths are excluded.

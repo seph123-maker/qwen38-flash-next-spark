@@ -7,6 +7,7 @@
 | FP8 side-layer converter, GB10 FLA fixes, faster PLE gather and state-copy guard | [Saren-Arterius fork](https://github.com/Saren-Arterius/qwen3.8-Flash-DGX-AutoRound), incorporated by Blazux |
 | PLE metrics and explicit KV-budget serving option | [techfury90, Blazux PR 19](https://github.com/blazux/qwen3.8-Flash-DGX/pull/19) |
 | Persistent compilation cache option | [AronRubin, Blazux PR 21](https://github.com/blazux/qwen3.8-Flash-DGX/pull/21) |
+| Reasoning-effort aliases, adapted into the Python launcher with a writable template copy and read-only mount | [techfury90, Blazux PR 24](https://github.com/blazux/qwen3.8-Flash-DGX/pull/24), [Blazux writable-cache fix](https://github.com/blazux/qwen3.8-Flash-DGX/commit/4ab5fbd0c5) |
 | MADV_RANDOM advice idea, reimplemented by Blazux | [MiaAI-Lab recipe](https://github.com/MiaAI-Lab/Qwen3.8-Flash-Next-Single-DGX-Spark) |
 | Sparse top-k problem diagnosis | [k3dani, Blazux issue 3](https://github.com/blazux/qwen3.8-Flash-DGX/issues/3) |
 | Mamba state-copy race fix already included in v0.29 | [AndreasKaratzas, vLLM PR 50729](https://github.com/vllm-project/vllm/pull/50729) |
