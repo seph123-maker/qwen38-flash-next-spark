@@ -7,12 +7,12 @@ The table below keeps the software's actual option names, with a plain-language 
 | Component | Production value | What it controls / why it is here |
 |---|---|---|
 | Runtime | vLLM 0.29.0, custom image | Updated serving software; pinned Blazux recipe |
-| Checkpoint | [gorbatjovy/qwen3.8-flash-next-abliterated-NVFP4-plefp8](https://huggingface.co/gorbatjovy/qwen3.8-flash-next-abliterated-NVFP4-plefp8), revision `2065365912e46b205c64a70ac5b85b4869674d31` | Existing model, plus local FP8 side-layer conversion |
-| Weight layout | NVFP4 experts; blockwise FP8 side layers; FP8 PLE; BF16 MTP experts | Existing hybrid layout retained |
+| Checkpoint | [drowzeys/keys-Qwen3.8-Flash-Next-NVFP4-dual-ablit-house-qsa-L3-47](https://huggingface.co/drowzeys/keys-Qwen3.8-Flash-Next-NVFP4-dual-ablit-house-qsa-L3-47), revision `a393318fb56d9aedc56d91b6f4962d9af26d2fe7` | NVIDIA-derived model, plus local FP8 side-layer conversion |
+| Weight layout | NVFP4 experts; blockwise FP8 side layers; FP8 PLE; NVIDIA blockwise FP8 MTP experts | Existing hybrid layout retained |
 | MTP | 3 speculative tokens, full draft vocabulary | Draft three tokens ahead; vocabulary reduction is disabled |
-| Context | 500,000 tokens; YaRN 4; original 262,144 | Retained |
+| Context | 679,000 tokens; YaRN 4; original 262,144 | Retained |
 | RoPE | theta 10,000,000; partial factor 0.25; interleaved mRoPE [11,11,10] | Retained |
-| KV cache | `auto` resolves to BF16; 18,661,632,901 bytes (17.38 GiB) | Memory reserved for attention history |
+| KV cache | `auto` resolves to BF16; 20,809,116,549 bytes (19.38 GiB) | Memory reserved for attention history |
 | Scheduler | 8 sequences; 8,192 batched tokens; chunked prefill | Limits concurrent work and processes long inputs in chunks |
 | Prefix caching | Enabled | Reuses processing of shared prompt beginnings; tested during the runtime upgrade |
 | Graphs | PIECEWISE with explicit splitting operators | CPU PLE lookup must run outside capture |

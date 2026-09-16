@@ -15,6 +15,10 @@ Blazux's repository provides the serving foundation. It is not the publisher of 
 
 The pinned Gorbatjovy card declares `base_model: windowsxp811203/Qwen3.8-Flash-Next-Abliterated-NVFP4` and `license_name: qwen-community-license-1.0`. Those are model-card provenance statements; our serving tests do not independently measure the effect of abliteration or prove quality parity with the base model. References to RadixArk's work in upstream credits do not by themselves establish that its tensor files are part of this checkpoint's lineage.
 
+## Current checkpoint
+
+The table above describes our **former** WindowsXP/Gorbatjovy checkpoint. Current lineage: Qwen → [NVIDIA NVFP4](https://huggingface.co/nvidia/Qwen3.8-Flash-Next-NVFP4) → [Drowzeys house projection](https://huggingface.co/drowzeys/keys-Qwen3.8-Flash-Next-NVFP4-dual-ablit-house-qsa-L3-47/blob/a393318fb56d9aedc56d91b6f4962d9af26d2fe7/README.md) → local Saren-Arterius FP8 side-layer conversion. Drowzeys credits Dealign as the projection-axis source. Our earlier checkpoint authors are not part of this new lineage.
+
 ## Exact production inputs
 
 | Input | Pin / reference |
@@ -22,7 +26,7 @@ The pinned Gorbatjovy card declares `base_model: windowsxp811203/Qwen3.8-Flash-N
 | Blazux serving source | [`d542745cd41045bcd71b9d7dbe659bca014202bf`](https://github.com/blazux/qwen3.8-Flash-DGX/tree/d542745cd41045bcd71b9d7dbe659bca014202bf) |
 | Base container | `vllm/vllm-openai@sha256:c2914767605584b6d8f45686b82de173ecc99e781897aa3d0a66dacd72c51ae1` |
 | Attention kernel | [jschmied `e0ef69d4f5575dad00d34e05479eaf4c6547bace`](https://github.com/jschmied/qwen38-flash-next-gb10/tree/e0ef69d4f5575dad00d34e05479eaf4c6547bace/patches/kernel-det) |
-| Downloaded checkpoint revision | `2065365912e46b205c64a70ac5b85b4869674d31` |
+| Downloaded checkpoint revision | `a393318fb56d9aedc56d91b6f4962d9af26d2fe7` |
 | Observed deployed image ID | `sha256:256342813adc473736bf153e83b050a8e408da8c5ac7544bfbeeff397041853a` |
 | Build instructions | [Dockerfile](../upstream/Dockerfile.block-a) |
 | Selected launch settings | [production.json](../production.json) |
@@ -59,6 +63,6 @@ These limits matter when interpreting a reported percentage. The included result
 
 The bundled Blazux license notice and original file headers are retained in [LICENSE](../LICENSE) and [upstream/LICENSE](../upstream/LICENSE). They identify Apache-2.0; the [full Apache-2.0 text](https://www.apache.org/licenses/LICENSE-2.0.txt) defines those code-license terms. Local integration helpers use Apache-2.0.
 
-The selected checkpoint declares Qwen Community License 1.0. See its [license at the pinned revision](https://huggingface.co/gorbatjovy/qwen3.8-flash-next-abliterated-NVFP4-plefp8/blob/2065365912e46b205c64a70ac5b85b4869674d31/LICENSE). Code licensing does not replace the model terms. No model weights are distributed here.
+The current [Drowzeys card](https://huggingface.co/drowzeys/keys-Qwen3.8-Flash-Next-NVFP4-dual-ablit-house-qsa-L3-47/blob/a393318fb56d9aedc56d91b6f4962d9af26d2fe7/README.md) declares NVIDIA Open Model License and Qwen Community License 1.0 terms. The former Gorbatjovy checkpoint declares Qwen Community License 1.0. See its [license at the pinned revision](https://huggingface.co/gorbatjovy/qwen3.8-flash-next-abliterated-NVFP4-plefp8/blob/2065365912e46b205c64a70ac5b85b4869674d31/LICENSE). Code licensing does not replace the model terms. No model weights are distributed here.
 
 Per-contribution author links are in [CREDITS.md](../CREDITS.md). The preserved upstream README covers additional options that are not deployed here; crediting those projects does not imply every optional patch is enabled.

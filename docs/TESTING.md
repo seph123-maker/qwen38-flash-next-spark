@@ -38,7 +38,7 @@ The two passes per setting shared a server start. This means the test does not s
 
 With three-token drafting enabled, a later request containing **483,011 input tokens** returned the correct requested information in **318.49 seconds**, with one preemption.
 
-This confirms that the chosen setup completed this large retrieval task. It does not demonstrate equally strong reasoning across a half-million-token document. The configured maximum remains **500,000 tokens**.
+This confirms that the chosen setup completed this large retrieval task. It does not demonstrate equally strong reasoning across a half-million-token document. The maximum at that stage was **500,000 tokens**. See the [subsequent Drowzeys/679k test](DROWZEYS-679K.md).
 
 ### 5. Try an alternative serving stack
 
@@ -54,7 +54,7 @@ The first launch stopped at a context-length configuration check. After adding t
 |---|---|
 | Did the runtime upgrade work with these weights? | Yes: the updated server passed the ten-check suite and the prefix-cache reuse check. |
 | Is three-token drafting worth using here? | It passed the small correctness suite and was about 8% faster in both measured passes. We adopted it provisionally. |
-| Has the current setup handled a very long prompt? | Yes: the 483,011-token retrieval test passed. |
+| Has the current setup handled a very long prompt? | Yes: the later Drowzeys test retrieved three keys from 678,477 input tokens; see [details](DROWZEYS-679K.md). |
 | Are long-context preemptions fixed? | No: the large retrieval still recorded one. |
 | Is this a general intelligence benchmark? | No: these are bounded code, tool, language, arithmetic and retrieval checks. |
 | Are answers guaranteed identical after every restart? | No: that was not established. |

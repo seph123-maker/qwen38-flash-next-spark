@@ -4,7 +4,7 @@ A community serving recipe for running an **abliterated Qwen3.8-Flash-Next model
 
 The launcher also adapts Blazux's reasoning-effort compatibility fix: clients can send `high` or `max` (mapped to `xhigh`) and `minimal` (mapped to `low`). This is an API compatibility change, with no claimed speed improvement. See [credits](CREDITS.md).
 
-This combines **[Blazux's serving recipe](https://github.com/blazux/qwen3.8-Flash-DGX)** with **[gorbatjovy's abliterated checkpoint](https://huggingface.co/gorbatjovy/qwen3.8-flash-next-abliterated-NVFP4-plefp8)**, additional FP8 conversion and our selected settings. Blazux supplies the serving foundation; the abliterated weights come from a separate model lineage. [Authors and credits](CREDITS.md) · [Exact sources and lineage](docs/SOURCES.md).
+This combines **[Blazux's serving recipe](https://github.com/blazux/qwen3.8-Flash-DGX)** with **[Drowzeys' NVIDIA-derived abliterated checkpoint](https://huggingface.co/drowzeys/keys-Qwen3.8-Flash-Next-NVFP4-dual-ablit-house-qsa-L3-47)**, additional FP8 conversion and our selected settings. Blazux supplies the serving foundation; the abliterated weights come from a separate model lineage. [Authors and credits](CREDITS.md) · [Exact sources and lineage](docs/SOURCES.md).
 
 **Recorded configuration: September 16, 2026.** This is a dated, pinned recipe, not a promise to track the newest upstream defaults.
 
@@ -25,10 +25,10 @@ This combines **[Blazux's serving recipe](https://github.com/blazux/qwen3.8-Flas
 | Part | Current choice | Plain-language meaning |
 |---|---|---|
 | Serving software | Blazux-based vLLM 0.29.0 | Loads the model and serves requests |
-| Model | Gorbatjovy's abliterated NVFP4/FP8-PLE checkpoint, with FP8 side-layer conversion | The selected model weights, compressed to fit |
+| Model | Drowzeys' NVIDIA-derived abliterated NVFP4 checkpoint, with FP8 side-layer conversion | The selected model weights, compressed to fit |
 | Drafting | Three tokens ahead; full draft vocabulary | Proposes several next tokens and verifies them together |
-| Maximum context | 500,000 tokens, YaRN factor 4 | Configured input-and-output window; quality at every depth is not established |
-| Attention cache | BF16, 17.38 GiB | Memory reserved for attention history |
+| Maximum context | 679,000 tokens, YaRN factor 4 | Configured input-and-output window; quality at every depth is not established |
+| Attention cache | BF16, 19.38 GiB | Memory reserved for attention history |
 | PLE table | File-backed lookup through Blazux's mmap implementation | Fetches required table rows without keeping the entire table resident |
 | Attention-selection fix | jschmied's deterministic top-k kernel | Addresses a specific attention-selection problem |
 | Compiled artifacts | Persistent vLLM and FlashInfer caches | Keeps compiled work when the container is recreated |
@@ -37,8 +37,11 @@ The complete machine-readable launch configuration is [production.json](producti
 
 ## What did testing show?
 
+Earlier results used Gorbatjovy. See [Drowzeys and 679k testing](docs/DROWZEYS-679K.md) for the subsequent model change and context extension.
+
 | Experiment | Observed result | Decision |
 |---|---|---|
+| Drowzeys at 679k context | Three keys retrieved correctly from 678,477 input tokens in 502.66 s; 3 preemptions; post-test smoke passed | Enabled with limited retrieval evidence |
 | Upgrade to vLLM 0.29 and preserve compilation caches | Both versions passed 10 checks. Long retrieval: 336.11 → 319.18 seconds; comparable short median latency was 3.1% longer. | Adopted the compatible runtime update; no general speed claim |
 | Draft three tokens ahead instead of two | About 8% faster output generation in two passes; all 32 requests across both settings passed their checks | Adopted provisionally; independent-start repeatability is unproven |
 | Retrieve information from a 483,011-token prompt with the chosen setting | Correct answer in 318.49 seconds, with one cache-related preemption | Kept the setting; this does not prove long-document reasoning quality |
@@ -47,7 +50,7 @@ The complete machine-readable launch configuration is [production.json](producti
 
 The drafting change missed our original 10% speed threshold and one small-sample acceptance guard. We deliberately accepted the smaller observed benefit; the [test history](docs/TESTING.md) preserves that distinction.
 
-These results do **not** establish that this is the best recipe, the best abliterated checkpoint, or an 8% improvement on every workload. The long retrieval still needed one preemption, and a dedicated prefix-reuse check has not been repeated after changing to three-token drafting.
+These results do **not** establish that this is the best recipe, the best abliterated checkpoint, or an 8% improvement on every workload. The latest 678k retrieval needed three preemptions, and a dedicated prefix-reuse check has not been repeated after changing to three-token drafting.
 
 ## Recreating it
 

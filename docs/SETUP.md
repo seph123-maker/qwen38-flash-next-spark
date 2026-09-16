@@ -23,8 +23,8 @@ Use an isolated Hugging Face cache when preparing the pinned revision. With the 
 
 ```bash
 export HF_CACHE="$PWD/model-cache"
-export MODEL=gorbatjovy/qwen3.8-flash-next-abliterated-NVFP4-plefp8
-hf download "$MODEL" --revision 2065365912e46b205c64a70ac5b85b4869674d31 --cache-dir "$HF_CACHE/hub"
+export MODEL=drowzeys/keys-Qwen3.8-Flash-Next-NVFP4-dual-ablit-house-qsa-L3-47
+hf download "$MODEL" --revision a393318fb56d9aedc56d91b6f4962d9af26d2fe7 --cache-dir "$HF_CACHE/hub"
 ( cd upstream && IMAGE=qwen38-published:20260915 bash scripts/prepare-hybrid.sh )
 python3 serve.py --hf-cache "$HF_CACHE" --compile-cache "$PWD/compile-cache"
 ```

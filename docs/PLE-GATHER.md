@@ -11,7 +11,7 @@ All 24 scripted correctness checks passed. Code improved by 16.0% and 18.7%; oth
 
 ## Method and decision
 
-One independent server start, ordered A1–B1–B2–A2, using the current Gorbatjovy weights, K3, 500k configuration and existing caches. Each phase used six existing fixtures: two code tasks, two tool tasks, arithmetic and 32k retrieval. Temperature and seeds were fixed; each phase used fresh prefix-cache salts. A test-only file-read hook switched the threshold in the same process; both arms incurred that hook. Production uses the normal environment setting without the hook.
+One independent server start, ordered A1–B1–B2–A2, using the then-current Gorbatjovy weights, K3, 500k configuration and existing caches. Each phase used six existing fixtures: two code tasks, two tool tasks, arithmetic and 32k retrieval. Temperature and seeds were fixed; each phase used fresh prefix-cache salts. A test-only file-read hook switched the threshold in the same process; both arms incurred that hook. Production uses the normal environment setting without the hook.
 
 Before measurement, the rule required at least 5% pooled decode improvement in both paired comparisons, all correctness checks passing and no category dropping over 10%. It passed. Pooled rate is sum(completion tokens minus one per request) divided by the accumulated inter-token-latency counter delta. These are server-counter estimates, not GPU-kernel timings.
 
@@ -19,4 +19,4 @@ This small, single-start comparison does not establish gains for every workload 
 
 ## Model status
 
-The deployed checkpoint remains Gorbatjovy. The NVIDIA-derived [Drowzeys checkpoint](https://huggingface.co/drowzeys/keys-Qwen3.8-Flash-Next-NVFP4-dual-ablit-house-qsa-L3-47) is being staged separately; no local quality, speed or memory comparison for it is reported here. Blazux's newer phase-timing counters are also not part of this change.
+This historical comparison used Gorbatjovy; Drowzeys was adopted afterward. See [model and context results](DROWZEYS-679K.md). The NVIDIA-derived [Drowzeys checkpoint](https://huggingface.co/drowzeys/keys-Qwen3.8-Flash-Next-NVFP4-dual-ablit-house-qsa-L3-47) was tested separately; the PLE gain measured here must not be presented as a measured gain on that checkpoint. Blazux's newer phase-timing counters are also not part of this change.
