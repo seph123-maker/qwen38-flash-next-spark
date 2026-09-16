@@ -18,6 +18,7 @@ The table below keeps the software's actual option names, with a plain-language 
 | Graphs | PIECEWISE with explicit splitting operators | CPU PLE lookup must run outside capture |
 | Attention | jschmied deterministic QSA top-k, `e0ef69d4`; exact Torch fallback off | Consistent sparse-attention selection; installed before these comparisons |
 | PLE | mmap; 32 workers; prewarm on; MADV_RANDOM | Existing PLE upgrade retained |
+| PLE gather threshold | `VLLM_PLE_MMAP_FAST_ROWS=0` | All nonempty gathers use the worker pool; measured against the former threshold of 512 |
 | PLE metrics | Prometheus multiprocess export on; fresh 256 MiB tmpfs | Retained |
 | Compilation caches | Persistent vLLM and FlashInfer bind mounts | Keeps compiled artifacts when the server container is recreated |
 | GDN | SM12x FlashInfer selector compatibility patch | Compatibility update for this GPU family |

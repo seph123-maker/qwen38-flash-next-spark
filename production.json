@@ -51,6 +51,7 @@
     "VLLM_CACHE_ROOT": "/root/.cache/vllm",
     "VLLM_FP8_HYBRID": "1",
     "VLLM_PLE_MMAP": "1",
+    "VLLM_PLE_MMAP_FAST_ROWS": "0",
     "VLLM_PLE_MMAP_MADVISE": "random",
     "VLLM_PLE_MMAP_PREWARM": "1",
     "VLLM_PLE_MMAP_PROMETHEUS": "1",

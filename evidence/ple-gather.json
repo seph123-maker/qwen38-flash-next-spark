@@ -1,0 +1,82 @@
+[
+  {
+    "pair": "A1/B1",
+    "category": "overall",
+    "baseline_tps": 41.98331919689737,
+    "candidate_tps": 44.53030089630414,
+    "gain": 0.060666515847917823,
+    "gate": true
+  },
+  {
+    "pair": "A1/B1",
+    "category": "code",
+    "baseline_tps": 33.833656302280176,
+    "candidate_tps": 39.24346135868259,
+    "gain": 0.15989418962200141,
+    "gate": true
+  },
+  {
+    "pair": "A1/B1",
+    "category": "long_context",
+    "baseline_tps": 41.88650999841917,
+    "candidate_tps": 46.60349074172002,
+    "gain": 0.11261336271460376,
+    "gate": true
+  },
+  {
+    "pair": "A1/B1",
+    "category": "reasoning_thinking",
+    "baseline_tps": 39.78786795282436,
+    "candidate_tps": 42.571761133593796,
+    "gain": 0.06996839298024815,
+    "gate": true
+  },
+  {
+    "pair": "A1/B1",
+    "category": "tools",
+    "baseline_tps": 46.78273471535226,
+    "candidate_tps": 47.177367118295734,
+    "gain": 0.008435428269522927,
+    "gate": true
+  },
+  {
+    "pair": "A2/B2",
+    "category": "overall",
+    "baseline_tps": 42.50414045294924,
+    "candidate_tps": 45.61185689715029,
+    "gain": 0.07311561676305867,
+    "gate": true
+  },
+  {
+    "pair": "A2/B2",
+    "category": "code",
+    "baseline_tps": 34.39144350846883,
+    "candidate_tps": 40.820266031536704,
+    "gain": 0.1869308719619398,
+    "gate": true
+  },
+  {
+    "pair": "A2/B2",
+    "category": "long_context",
+    "baseline_tps": 46.06674703414315,
+    "candidate_tps": 45.32198367971106,
+    "gain": -0.016167048953556362,
+    "gate": true
+  },
+  {
+    "pair": "A2/B2",
+    "category": "reasoning_thinking",
+    "baseline_tps": 43.78521320786239,
+    "candidate_tps": 43.18470060228308,
+    "gain": -0.013714963604915753,
+    "gate": true
+  },
+  {
+    "pair": "A2/B2",
+    "category": "tools",
+    "baseline_tps": 48.2383806239744,
+    "candidate_tps": 47.847289812194624,
+    "gain": -0.008107461459545884,
+    "gate": true
+  }
+]

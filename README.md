@@ -6,7 +6,7 @@ The launcher also adapts Blazux's reasoning-effort compatibility fix: clients ca
 
 This combines **[Blazux's serving recipe](https://github.com/blazux/qwen3.8-Flash-DGX)** with **[gorbatjovy's abliterated checkpoint](https://huggingface.co/gorbatjovy/qwen3.8-flash-next-abliterated-NVFP4-plefp8)**, additional FP8 conversion and our selected settings. Blazux supplies the serving foundation; the abliterated weights come from a separate model lineage. [Authors and credits](CREDITS.md) · [Exact sources and lineage](docs/SOURCES.md).
 
-**Recorded configuration: September 15, 2026.** This is a dated, pinned recipe, not a promise to track the newest upstream defaults.
+**Recorded configuration: September 16, 2026.** This is a dated, pinned recipe, not a promise to track the newest upstream defaults.
 
 ## Start here
 
@@ -43,6 +43,7 @@ The complete machine-readable launch configuration is [production.json](producti
 | Draft three tokens ahead instead of two | About 8% faster output generation in two passes; all 32 requests across both settings passed their checks | Adopted provisionally; independent-start repeatability is unproven |
 | Retrieve information from a 483,011-token prompt with the chosen setting | Correct answer in 318.49 seconds, with one cache-related preemption | Kept the setting; this does not prove long-document reasoning quality |
 | Try Eugr/B12X with the same weights | Failed during startup, before producing an answer | Restored the working server; no speed comparison was possible |
+| Send all PLE gathers through the worker pool | +6.1% and +7.3% pooled decode rate in two paired comparisons; all 24 checks passed | `VLLM_PLE_MMAP_FAST_ROWS=0`; see [method and limitations](docs/PLE-GATHER.md) |
 
 The drafting change missed our original 10% speed threshold and one small-sample acceptance guard. We deliberately accepted the smaller observed benefit; the [test history](docs/TESTING.md) preserves that distinction.
 
