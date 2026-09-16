@@ -1,4 +1,7 @@
-# Credits tied to deployed artifacts
+# Credits and historical contributions
+
+Current serving code is the unmodified [Blazux ed65cc8 snapshot](https://github.com/blazux/qwen3.8-Flash-DGX/tree/ed65cc80646e85cf6631b93d7dfcf9412183cc30). Its [upstream credits](upstream-blazux/README.md#credits) and license notices are preserved. The table below also records contributors to our former custom v0.29 image; it is not a list of patches all applied to the current preview image.
+
 
 | Contribution | Source |
 |---|---|
@@ -21,7 +24,7 @@
 
 Local contributions: assembling pinned sources, the GDN selector adaptation, logging-only allocation diagnostics, persistent-cache deployment, the comparison of drafting two versus three tokens ahead, and publication helpers. The underlying kernel and recipe authors retain credit.
 
-Related but not deployed: [Eugr](https://github.com/eugr/spark-vllm-docker) and [B12X](https://github.com/local-inference-lab/b12x) supplied the alternative serving stack we tried; that candidate failed startup before any inference benchmark. Nanetnounou's optional FP8-KV work is credited by upstream but is not enabled in this BF16-KV recipe. The reduced-vocabulary patch exists in the image and is disabled.
+Related but not deployed: [Eugr](https://github.com/eugr/spark-vllm-docker) and [B12X](https://github.com/local-inference-lab/b12x) supplied the alternative serving stack we tried; that candidate failed startup before any inference benchmark. Nanetnounou's optional FP8-KV work is credited by upstream but is not enabled in this BF16-KV recipe. The current upstream reduced-vocabulary patch is enabled; it was disabled in our former custom image.
 
 License notices in `upstream/LICENSE` and source headers are preserved. No MiaAI source is newly copied into this bundle; the deployed mmap implementation is the Blazux implementation. Checkpoint redistribution remains subject to the checkpoint/base-model licenses rather than the serving-code license.
 

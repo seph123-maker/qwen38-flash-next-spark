@@ -1,0 +1,21 @@
+{
+  "model": "qwen3.8-flash-next",
+  "messages": [
+    {
+      "role": "system",
+      "content": "Fixture 8cb612861f4adf2001db3da1e9b6cddfeebab7b48ad0a518f30dc3226c3b82ca. Follow the user request. Tool calls are returned to a test harness; it executes no external actions."
+    },
+    {
+      "role": "user",
+      "content": "Write only Python code defining clamp(value, low, high). Return low below the range, high above the range, otherwise value. Raise ValueError when low > high. No imports, explanations or tests."
+    }
+  ],
+  "temperature": 0,
+  "seed": 42,
+  "max_tokens": 4096,
+  "cache_salt": "4ab0bf23077acd222cedae6aed6f91aaa2a6b6d050a8ec2d4ccff80f7d2e4f2c",
+  "chat_template_kwargs": {
+    "enable_thinking": true
+  },
+  "stream": false
+}

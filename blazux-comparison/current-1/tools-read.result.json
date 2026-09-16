@@ -1,0 +1,16 @@
+{
+  "id": "tools-read",
+  "category": "tools",
+  "grade": {
+    "pass": true,
+    "format_fenced": false,
+    "truncated": false
+  },
+  "seconds": 8.4063044830109,
+  "prompt_tokens": 590,
+  "completion_tokens": 354,
+  "decode_counter_seconds": 7.821255785005633,
+  "decode_counter_tps": 45.26127385817814,
+  "preemptions": 0.0,
+  "answer_sha256": "92cca1ed4f05d98f351ac1b2cc594ef912412cf8c2f0b6892b0ab5458b1a4cce"
+}

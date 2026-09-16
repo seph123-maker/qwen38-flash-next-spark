@@ -1,0 +1,16 @@
+{
+  "id": "code-dedupe",
+  "category": "code",
+  "grade": {
+    "pass": true,
+    "format_fenced": false,
+    "truncated": false
+  },
+  "seconds": 5.126651878992561,
+  "prompt_tokens": 174,
+  "completion_tokens": 188,
+  "decode_counter_seconds": 4.830937552003888,
+  "decode_counter_tps": 38.91584148547253,
+  "preemptions": 0.0,
+  "answer_sha256": "277c4be24c5ad827f6faea05b3804eda1545710e0c1af2e587955f04b46805d4"
+}

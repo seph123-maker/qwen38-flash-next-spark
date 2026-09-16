@@ -16,7 +16,7 @@ Requires an ARM64 GB10 system, Docker with NVIDIA GPU support, Python 3, and the
 From this directory:
 
 ```bash
-docker build -f upstream/Dockerfile.block-a -t qwen38-published:20260915 upstream
+docker build -f upstream-blazux/Dockerfile -t qwen38-published:20260916 upstream-blazux
 ```
 
 Use an isolated Hugging Face cache when preparing the pinned revision. With the Hugging Face CLI installed and model access accepted where required:
@@ -25,11 +25,11 @@ Use an isolated Hugging Face cache when preparing the pinned revision. With the 
 export HF_CACHE="$PWD/model-cache"
 export MODEL=drowzeys/keys-Qwen3.8-Flash-Next-NVFP4-dual-ablit-house-qsa-L3-47
 hf download "$MODEL" --revision a393318fb56d9aedc56d91b6f4962d9af26d2fe7 --cache-dir "$HF_CACHE/hub"
-( cd upstream && IMAGE=qwen38-published:20260915 bash scripts/prepare-hybrid.sh )
+( cd upstream-blazux && IMAGE=qwen38-published:20260916 bash scripts/prepare-hybrid.sh )
 python3 serve.py --hf-cache "$HF_CACHE" --compile-cache "$PWD/compile-cache"
 ```
 
-The preparation script selects the downloaded snapshot and creates its `-fp8hybrid` sibling. The launcher pins that exact sibling. If using a populated cache containing other revisions, explicitly verify which snapshot the converter selected. The converter uses source-relative tools, so run it from `upstream` as shown. It is a one-time weight conversion, not part of server startup.
+The preparation script selects the downloaded snapshot and creates its `-fp8hybrid` sibling. The launcher pins that exact sibling. If using a populated cache containing other revisions, explicitly verify which snapshot the converter selected. The converter uses source-relative tools, so run it from `upstream-blazux` as shown. It is a one-time weight conversion, not part of server startup.
 
 The launcher refuses to replace an existing container. Allow the current model server to finish requests and stop it before loading this full model on the same Spark. First weight loading on this system took roughly 8–13 minutes. The API binds all interfaces without authentication, matching the measured configuration; choose network exposure appropriate to your deployment.
 

@@ -1,85 +1,56 @@
 # Qwen3.8-Flash-Next on one DGX Spark
 
-A community serving recipe for running an **abliterated Qwen3.8-Flash-Next model on one GB10 system**, with tests covering code, tool calling, Unicode text and long-document retrieval.
+A tested **Blazux-default serving configuration with Drowzeys' NVIDIA-derived abliterated weights** on one GB10 system. The September 16 selection uses a pinned Blazux preview image, FP8 hybrid side layers, automatic KV allocation, two-token speculative drafting and a reduced draft vocabulary.
 
-The launcher also adapts Blazux's reasoning-effort compatibility fix: clients can send `high` or `max` (mapped to `xhigh`) and `minimal` (mapped to `low`). This is an API compatibility change, with no claimed speed improvement. See [credits](CREDITS.md).
-
-This combines **[Blazux's serving recipe](https://github.com/blazux/qwen3.8-Flash-DGX)** with **[Drowzeys' NVIDIA-derived abliterated checkpoint](https://huggingface.co/drowzeys/keys-Qwen3.8-Flash-Next-NVFP4-dual-ablit-house-qsa-L3-47)**, additional FP8 conversion and our selected settings. Blazux supplies the serving foundation; the abliterated weights come from a separate model lineage. [Authors and credits](CREDITS.md) · [Exact sources and lineage](docs/SOURCES.md).
-
-**Recorded configuration: September 16, 2026.** This is a dated, pinned recipe, not a promise to track the newest upstream defaults.
+This is based on [Blazux's work](https://github.com/blazux/qwen3.8-Flash-DGX), not a claim to have invented a new inference stack. [Credits](CREDITS.md) · [Sources](docs/SOURCES.md).
 
 ## Start here
 
-| You want to… | Read |
+| Need | Guide |
 |---|---|
-| Recreate the server | [Setup guide](docs/SETUP.md) |
-| Understand what we changed and tested | [Tests and decisions](docs/TESTING.md) |
-| See every important setting | [Configuration reference](docs/CONFIGURATION.md) |
-| Connect Hermes or check the API | [Using the server](docs/USAGE.md) |
-| Investigate slow startup, cache pressure or a failed launch | [Troubleshooting](docs/TROUBLESHOOTING.md) |
-| Trace code, weights, licenses and limitations | [Sources and reproducibility](docs/SOURCES.md) |
-| Decode unfamiliar terms | [Short glossary](docs/GLOSSARY.md) |
+| Build and run | [Setup](docs/SETUP.md) |
+| Latest comparison and decision | [Blazux-default comparison](docs/BLAZUX-DEFAULTS.md) |
+| Exact settings | [Configuration](docs/CONFIGURATION.md), [production.json](production.json) |
+| Hermes/API connection | [Usage](docs/USAGE.md) |
+| Earlier tests | [Runtime/drafting history](docs/TESTING.md), [PLE comparison](docs/PLE-GATHER.md), [Drowzeys/679k](docs/DROWZEYS-679K.md) |
+| Troubleshooting and terminology | [Troubleshooting](docs/TROUBLESHOOTING.md), [Glossary](docs/GLOSSARY.md) |
 
-## What is running?
+## Selected configuration
 
-| Part | Current choice | Plain-language meaning |
-|---|---|---|
-| Serving software | Blazux-based vLLM 0.29.0 | Loads the model and serves requests |
-| Model | Drowzeys' NVIDIA-derived abliterated NVFP4 checkpoint, with FP8 side-layer conversion | The selected model weights, compressed to fit |
-| Drafting | Three tokens ahead; full draft vocabulary | Proposes several next tokens and verifies them together |
-| Maximum context | 679,000 tokens, YaRN factor 4 | Configured input-and-output window; quality at every depth is not established |
-| Attention cache | BF16, 19.38 GiB | Memory reserved for attention history |
-| PLE table | File-backed lookup through Blazux's mmap implementation | Fetches required table rows without keeping the entire table resident |
-| Attention-selection fix | jschmied's deterministic top-k kernel | Addresses a specific attention-selection problem |
-| Compiled artifacts | Persistent vLLM and FlashInfer caches | Keeps compiled work when the container is recreated |
+| Component | Value |
+|---|---|
+| Serving source | Blazux `ed65cc80646e85cf6631b93d7dfcf9412183cc30`, default preview Dockerfile |
+| Weights | Drowzeys `a393318fb56d9aedc56d91b6f4962d9af26d2fe7`, locally prepared FP8 hybrid |
+| Maximum total context | **500,000 tokens**, YaRN factor 4 |
+| KV cache | BF16; automatic sizing at utilization **0.80** |
+| Drafting | **2 tokens**, reduced **65,536-token** draft vocabulary |
+| PLE | Disk-backed mmap, worker-pool gathers, prewarming off |
+| Attention / prefix caching | Deterministic top-k enabled; prefix caching enabled |
+| Optional upstream features retained | Persistent compilation caches, Prometheus multiprocess export |
 
-The complete machine-readable launch configuration is [production.json](production.json). [serve.py](serve.py) uses it directly. Technical terms are explained in the [glossary](docs/GLOSSARY.md).
+The trial boot allocated **19.21 GiB KV / 710,606 reported cache tokens**. Automatic allocation may differ after another restart; that figure is not the configured request limit. The launcher also preserves upstream-supported effort aliases. Image and weights remain separately pinned.
 
-## What did testing show?
+## Latest measured comparison
 
-Earlier results used Gorbatjovy. See [Drowzeys and 679k testing](docs/DROWZEYS-679K.md) for the subsequent model change and context extension.
+| Measurement | Previous custom v0.29 / K3 / 679k | Blazux defaults / K2 / 500k |
+|---|---:|---:|
+| Short scripted checks | 12/12 | 12/12 |
+| Pooled decode, first pass | 42.29 tok/s | 44.79 tok/s (+5.9%) |
+| Pooled decode, second pass | 43.70 tok/s | 46.66 tok/s (+6.8%) |
+| Total short-request time, first pass | 45.58 s | 50.18 s |
+| Total short-request time, second pass | 43.98 s | 43.98 s |
+| 483,011-token retrieval | Correct, 325.74 s, 1 preemption | Correct, 312.89 s, 1 preemption |
 
-| Experiment | Observed result | Decision |
-|---|---|---|
-| Drowzeys at 679k context | Three keys retrieved correctly from 678,477 input tokens in 502.66 s; 3 preemptions; post-test smoke passed | Enabled with limited retrieval evidence |
-| Upgrade to vLLM 0.29 and preserve compilation caches | Both versions passed 10 checks. Long retrieval: 336.11 → 319.18 seconds; comparable short median latency was 3.1% longer. | Adopted the compatible runtime update; no general speed claim |
-| Draft three tokens ahead instead of two | About 8% faster output generation in two passes; all 32 requests across both settings passed their checks | Adopted provisionally; independent-start repeatability is unproven |
-| Retrieve information from a 483,011-token prompt with the chosen setting | Correct answer in 318.49 seconds, with one cache-related preemption | Kept the setting; this does not prove long-document reasoning quality |
-| Try Eugr/B12X with the same weights | Failed during startup, before producing an answer | Restored the working server; no speed comparison was possible |
-| Send all PLE gathers through the worker pool | +6.1% and +7.3% pooled decode rate in two paired comparisons; all 24 checks passed | `VLLM_PLE_MMAP_FAST_ROWS=0`; see [method and limitations](docs/PLE-GATHER.md) |
+Selected by user preference after successful testing. Generation was faster in these samples; complete request latency was mixed. This is a small whole-recipe comparison, not proof of general intelligence parity, a universal speed gain or the benefit of any one setting. Each arm had one start and two short passes. Earlier successful 679k retrieval remains documented, but **679k is not the current limit**.
 
-The drafting change missed our original 10% speed threshold and one small-sample acceptance guard. We deliberately accepted the smaller observed benefit; the [test history](docs/TESTING.md) preserves that distinction.
-
-These results do **not** establish that this is the best recipe, the best abliterated checkpoint, or an 8% improvement on every workload. The latest 678k retrieval needed three preemptions, and a dedicated prefix-reuse check has not been repeated after changing to three-token drafting.
-
-## Recreating it
-
-Use the [setup guide](docs/SETUP.md) for the three stages: build the pinned image, download/prepare the pinned model, and launch. If that exact prepared model already exists, skip its preparation.
-
-From the repository root, the image build is:
+## Reproduce and audit
 
 ```bash
-docker build -f upstream/Dockerfile.block-a -t qwen38-published:20260915 upstream
+docker build -f upstream-blazux/Dockerfile -t qwen38-published:20260916 upstream-blazux
 ```
 
-The historical Dockerfile name is retained for traceability; the guide explains what it builds. The package's launcher was checked with a Linux dry run. A clean build and complete setup from this published checkout have **not** been repeated, so this remains a documented reproduction recipe rather than an independently verified installer.
+Follow [setup](docs/SETUP.md) for model access, pinned download, hybrid conversion and launch. The upstream source built and ran on the Spark; a clean end-to-end reproduction from this public checkout has not been independently repeated.
 
-## Repository map
+[benchmark/](benchmark/) includes synthetic fixtures and scoring/measurement scripts; [blazux-comparison/](blazux-comparison/) contains saved requests, responses, metrics and grades for both arms. Older [evidence summaries](evidence/) remain available. Historical custom build files remain under [upstream/](upstream/); current pinned upstream files are under [upstream-blazux/](upstream-blazux/).
 
-| Path | Purpose |
-|---|---|
-| `docs/` | Setup, usage, settings, tests, troubleshooting and sources |
-| `production.json` | Exact exported settings, excluding credentials |
-| `serve.py` | Launcher that refuses to replace an existing container |
-| `evidence/` | Compact measured results and trial state |
-| `upstream/` | Preserved pinned Blazux source plus documented local patches |
-| `CREDITS.md` / `LICENSE` | Attribution and code license notice |
-| `SHA256SUMS` | Checksums for this package's files |
-
-The bundled upstream documentation includes other profiles and upstream measurements; it does not describe our selected settings in every case. Start with the guides above.
-
-## Share a result or report a problem
-
-Use [the issue tracker](https://github.com/seph123-maker/qwen38-flash-next-spark/issues) and include the model revision, image/runtime version, settings, prompt/output lengths and relevant error excerpt. See [how to contribute](CONTRIBUTING.md) for the details that make comparisons useful.
-
-Code notices are preserved under Apache-2.0. Model weights use their separate publisher terms; the selected checkpoint declares Qwen Community License 1.0. No weights or credentials are included. See [sources and licensing](docs/SOURCES.md).
+Weights are not redistributed. Their gated access and model-license terms apply separately from code licensing. See [sources and licenses](docs/SOURCES.md).

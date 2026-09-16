@@ -1,0 +1,92 @@
+{
+  "id": "chatcmpl-a625d9c90abc5df4",
+  "object": "chat.completion",
+  "created": 1789542860,
+  "model": "qwen3.8-flash-next",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": null,
+        "refusal": null,
+        "annotations": null,
+        "audio": null,
+        "function_call": null,
+        "tool_calls": [
+          {
+            "id": "chatcmpl-tool-94dd160dfec666ab",
+            "type": "function",
+            "function": {
+              "name": "read_file",
+              "arguments": "{\"path\": \"src/client.py\", \"start_line\": 1, \"end_line\": 80}"
+            }
+          },
+          {
+            "id": "chatcmpl-tool-a52130bd40b8d877",
+            "type": "function",
+            "function": {
+              "name": "read_file",
+              "arguments": "{\"path\": \"src/agent.py\", \"start_line\": 35, \"end_line\": 120}"
+            }
+          },
+          {
+            "id": "chatcmpl-tool-a5a16d7a3ddb5763",
+            "type": "function",
+            "function": {
+              "name": "read_file",
+              "arguments": "{\"path\": \"tests/test_client.py\", \"start_line\": 1, \"end_line\": 100}"
+            }
+          },
+          {
+            "id": "chatcmpl-tool-b017d7f7934bf3d9",
+            "type": "function",
+            "function": {
+              "name": "read_file",
+              "arguments": "{\"path\": \"src/tools/files.py\", \"start_line\": 10, \"end_line\": 90}"
+            }
+          },
+          {
+            "id": "chatcmpl-tool-963b2ef860a8d6a7",
+            "type": "function",
+            "function": {
+              "name": "read_file",
+              "arguments": "{\"path\": \"config/runtime.py\", \"start_line\": 1, \"end_line\": 60}"
+            }
+          },
+          {
+            "id": "chatcmpl-tool-ab1512aa7facb39a",
+            "type": "function",
+            "function": {
+              "name": "read_file",
+              "arguments": "{\"path\": \"README.md\", \"start_line\": 15, \"end_line\": 75}"
+            }
+          }
+        ],
+        "reasoning": "The user wants six read_file calls, one for each request, preserving every argument. I'll make all six calls in the same block since they're independent.\n"
+      },
+      "logprobs": null,
+      "finish_reason": "tool_calls",
+      "stop_reason": null,
+      "token_ids": null,
+      "routed_experts": null
+    }
+  ],
+  "service_tier": null,
+  "system_fingerprint": "vllm-0.29.0-7b540699",
+  "usage": {
+    "prompt_tokens": 590,
+    "total_tokens": 944,
+    "completion_tokens": 354,
+    "prompt_tokens_details": null,
+    "completion_tokens_details": {
+      "reasoning_tokens": 33
+    }
+  },
+  "prompt_logprobs": null,
+  "prompt_token_ids": null,
+  "prompt_text": null,
+  "kv_transfer_params": null,
+  "ec_transfer_params": null,
+  "metrics": null
+}

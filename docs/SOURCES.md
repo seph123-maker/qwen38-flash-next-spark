@@ -2,6 +2,10 @@
 
 # Sources, model lineage and reproducibility
 
+## Current serving inputs
+
+Current source: [Blazux ed65cc8](https://github.com/blazux/qwen3.8-Flash-DGX/tree/ed65cc80646e85cf6631b93d7dfcf9412183cc30), bundled under [upstream-blazux](../upstream-blazux/). Base: `vllm/vllm-openai:qwen38-flash-next@sha256:fc120ece0a388cc0aa1caad4a9f1cd92113484ab7ec2fd0efadd62585be05bf8`. Built image ID: `sha256:11e907b55b7489d3ccec7f4d9cede4791ad1d7fd0a95252ee9ab6d8fb618dc59`. Current exact launch: [production.json](../production.json). Our selection uses the upstream preview recipe, plus supported model/cache/metrics options.
+
 ## Two separate things: serving code and model weights
 
 Blazux's repository provides the serving foundation. It is not the publisher of the abliterated weights used here. We selected a separate checkpoint and applied the compatible side-layer conversion tool.
@@ -19,7 +23,9 @@ The pinned Gorbatjovy card declares `base_model: windowsxp811203/Qwen3.8-Flash-N
 
 The table above describes our **former** WindowsXP/Gorbatjovy checkpoint. Current lineage: Qwen → [NVIDIA NVFP4](https://huggingface.co/nvidia/Qwen3.8-Flash-Next-NVFP4) → [Drowzeys house projection](https://huggingface.co/drowzeys/keys-Qwen3.8-Flash-Next-NVFP4-dual-ablit-house-qsa-L3-47/blob/a393318fb56d9aedc56d91b6f4962d9af26d2fe7/README.md) → local Saren-Arterius FP8 side-layer conversion. Drowzeys credits Dealign as the projection-axis source. Our earlier checkpoint authors are not part of this new lineage.
 
-## Exact production inputs
+## Historical custom v0.29 inputs
+
+These pins describe the previous image, preserved for comparison. Current source and base are listed above.
 
 | Input | Pin / reference |
 |---|---|
@@ -29,21 +35,21 @@ The table above describes our **former** WindowsXP/Gorbatjovy checkpoint. Curren
 | Downloaded checkpoint revision | `a393318fb56d9aedc56d91b6f4962d9af26d2fe7` |
 | Observed deployed image ID | `sha256:256342813adc473736bf153e83b050a8e408da8c5ac7544bfbeeff397041853a` |
 | Build instructions | [Dockerfile](../upstream/Dockerfile.block-a) |
-| Selected launch settings | [production.json](../production.json) |
+| Previous launch settings | [previous-679k-config.json](../evidence/previous-679k-config.json) |
 
 The observed image ID is a local Docker content identifier, not an image we have published to a registry. Build the image from the included Dockerfile. It fetches the kernel files by commit and validates their file checksums. A rebuild need not produce the same image ID.
 
-## What differs from the bundled Blazux source?
+## Historical custom additions (previous image)
 
 | Local addition / selection | File or evidence |
 |---|---|
 | Pinned base image, limited build parallelism and local patch application | [Dockerfile.block-a](../upstream/Dockerfile.block-a) |
 | GDN SM12x selector adaptation from upstream PR 55715 | [patch_gdn_sm12.py](../upstream/patch_gdn_sm12.py), [upstream PR](https://github.com/vllm-project/vllm/pull/55715) |
 | Allocation/preemption logging, without scheduler behavior changes | [patch_diagnostics.py](../upstream/patch_diagnostics.py) |
-| Selected checkpoint, three-token drafting, full draft vocabulary and cache budget | [production.json](../production.json) |
+| Former three-token/full-vocabulary configuration | [previous configuration](../evidence/previous-679k-config.json) |
 | Launcher and measured comparison summaries | [serve.py](../serve.py), [evidence directory](../evidence) |
 
-The upstream default checkpoint and reduced-draft-vocabulary setting are not our selected settings. Do not substitute current upstream defaults and describe the result as this exact configuration.
+The current checkpoint differs from upstream stock weights; reduced draft vocabulary now follows upstream. Do not substitute current upstream defaults and describe the result as this exact configuration.
 
 ## Reproducibility status
 

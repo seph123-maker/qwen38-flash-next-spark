@@ -1,0 +1,16 @@
+{
+  "id": "long-32k",
+  "category": "long_context",
+  "grade": {
+    "pass": true,
+    "format_fenced": false,
+    "truncated": false
+  },
+  "seconds": 18.76958129700506,
+  "prompt_tokens": 32774,
+  "completion_tokens": 212,
+  "decode_counter_seconds": 5.089923721010564,
+  "decode_counter_tps": 41.650918878192755,
+  "preemptions": 0.0,
+  "answer_sha256": "6b86feefb9078263f65362399383a8f52ef5c9b93da7175513caf6f511213040"
+}

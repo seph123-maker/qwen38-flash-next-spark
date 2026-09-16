@@ -1,6 +1,6 @@
 # Drowzeys and 679k context — September 16, 2026
 
-Production now uses Drowzeys' NVIDIA-derived checkpoint at revision `a393318fb56d9aedc56d91b6f4962d9af26d2fe7`, prepared with the bundled Saren-Arterius FP8 side-layer converter. The original download is preserved. The converter reported a worst per-tensor maximum relative round-trip error of 0.0354; this is a numerical conversion check, not a quality score.
+The earlier 679k experiment used Drowzeys' NVIDIA-derived checkpoint at revision `a393318fb56d9aedc56d91b6f4962d9af26d2fe7`, prepared with the bundled Saren-Arterius FP8 side-layer converter. The original download is preserved. The converter reported a worst per-tensor maximum relative round-trip error of 0.0354; this is a numerical conversion check, not a quality score.
 
 ## Model comparison at 500k configured context
 
@@ -23,7 +23,7 @@ Blazux's reported 679k KV pool is not a validated single-request context limit. 
 | Larger cache, same input | 19.38 GiB | 483,011 | Yes | 302.27 s | 1 |
 | Extended context | 19.38 GiB | 678,477 | Yes | 502.66 s | 3 |
 
-The larger-cache 483k test missed its zero-preemption goal and was initially reverted. A subsequent, separately authorized 679k capacity test allowed preemptions and passed, so 19.38 GiB and 679k are now selected. vLLM reported 708,083 cache-token capacity at the larger budget. This does not guarantee all that capacity can be used by one request.
+The larger-cache 483k test missed its zero-preemption goal and was initially reverted. A subsequent, separately authorized 679k capacity test allowed preemptions and passed, so 19.38 GiB and 679k were selected at that stage; the later Blazux-default comparison returned the configured limit to 500k. vLLM reported 708,083 cache-token capacity at the larger budget. This does not guarantee all that capacity can be used by one request.
 
 The extended fixture placed three exact keys around 10%, 50% and 90% of a repetitive maintenance-record archive. Temperature was zero; seed 42; thinking disabled; output budget 256 tokens. It returned the expected JSON in 46 output tokens and passed a subsequent short smoke check. See [679k evidence](../evidence/context679.json) and [initial Drowzeys 483k evidence](../evidence/drowzeys-483k.json).
 

@@ -1,0 +1,42 @@
+{
+  "id": "chatcmpl-91c49f4ed0b79c70",
+  "object": "chat.completion",
+  "created": 1789544073,
+  "model": "qwen3.8-flash-next",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "\n\ndef clamp(value, low, high):\n    if low > high:\n        raise ValueError(\"low must be less than or equal to high\")\n    if value < low:\n        return low\n    if value > high:\n        return high\n    return value",
+        "refusal": null,
+        "annotations": null,
+        "audio": null,
+        "function_call": null,
+        "reasoning": "We need answer user's request: Write only Python code defining clamp(value, low, high). Return low below range, high above range, otherwise value. Raise ValueError when low > high. No imports, explanations or tests. Need final only code. Ensure no extra text.\n"
+      },
+      "logprobs": null,
+      "finish_reason": "stop",
+      "stop_reason": null,
+      "token_ids": null,
+      "routed_experts": null
+    }
+  ],
+  "service_tier": null,
+  "system_fingerprint": "vllm-0.1.dev20073+g8e685d198-ee7299af",
+  "usage": {
+    "prompt_tokens": 167,
+    "total_tokens": 282,
+    "completion_tokens": 115,
+    "prompt_tokens_details": null,
+    "completion_tokens_details": {
+      "reasoning_tokens": 56
+    }
+  },
+  "prompt_logprobs": null,
+  "prompt_token_ids": null,
+  "prompt_text": null,
+  "kv_transfer_params": null,
+  "ec_transfer_params": null,
+  "metrics": null
+}

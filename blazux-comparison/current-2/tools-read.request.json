@@ -1,0 +1,51 @@
+{
+  "model": "qwen3.8-flash-next",
+  "messages": [
+    {
+      "role": "system",
+      "content": "Fixture f64cee06e8e6ed82dbb9843fca86866850bf3272a6e1148a70a5840a0a8abbc7. Follow the user request. Tool calls are returned to a test harness; it executes no external actions."
+    },
+    {
+      "role": "user",
+      "content": "Call read_file once for each of these six independent requests, preserving every argument: [{\"path\": \"src/client.py\", \"start_line\": 1, \"end_line\": 80}, {\"path\": \"src/agent.py\", \"start_line\": 35, \"end_line\": 120}, {\"path\": \"tests/test_client.py\", \"start_line\": 1, \"end_line\": 100}, {\"path\": \"src/tools/files.py\", \"start_line\": 10, \"end_line\": 90}, {\"path\": \"config/runtime.py\", \"start_line\": 1, \"end_line\": 60}, {\"path\": \"README.md\", \"start_line\": 15, \"end_line\": 75}]. Return the six tool calls, with no prose."
+    }
+  ],
+  "temperature": 0,
+  "seed": 42,
+  "max_tokens": 1536,
+  "cache_salt": "de6a8a152994a82ea82557dc3331916ecee6b6537b23425a8b1ea0f2d82d32b9",
+  "chat_template_kwargs": {
+    "enable_thinking": true
+  },
+  "tools": [
+    {
+      "type": "function",
+      "function": {
+        "name": "read_file",
+        "description": "Read the requested file line interval.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string"
+            },
+            "start_line": {
+              "type": "integer"
+            },
+            "end_line": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "path",
+            "start_line",
+            "end_line"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  ],
+  "tool_choice": "auto",
+  "stream": false
+}

@@ -1,0 +1,16 @@
+{
+  "id": "code-clamp",
+  "category": "code",
+  "grade": {
+    "pass": true,
+    "format_fenced": false,
+    "truncated": false
+  },
+  "seconds": 2.4635908269847278,
+  "prompt_tokens": 167,
+  "completion_tokens": 82,
+  "decode_counter_seconds": 2.162784849992022,
+  "decode_counter_tps": 37.914081005469626,
+  "preemptions": 0.0,
+  "answer_sha256": "34cc8b81f33d6bceaf2503d22e473d42ac3e770ee3a339ea18125d0c41e0091b"
+}

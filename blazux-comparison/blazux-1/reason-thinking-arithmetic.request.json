@@ -1,0 +1,17 @@
+{
+  "model": "qwen3.8-flash-next",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Return only the integer value of 17*19-23."
+    }
+  ],
+  "temperature": 0,
+  "seed": 42,
+  "max_tokens": 2048,
+  "chat_template_kwargs": {
+    "enable_thinking": true
+  },
+  "stream": false,
+  "cache_salt": "762d07362379e425ba3faaed9b7e94690bf5519d855545aef64fe3fc0aa8b3bd"
+}

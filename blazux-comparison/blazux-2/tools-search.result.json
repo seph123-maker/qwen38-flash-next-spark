@@ -1,0 +1,16 @@
+{
+  "id": "tools-search",
+  "category": "tools",
+  "grade": {
+    "pass": true,
+    "format_fenced": false,
+    "truncated": false
+  },
+  "seconds": 7.9138120809802786,
+  "prompt_tokens": 573,
+  "completion_tokens": 353,
+  "decode_counter_seconds": 7.39167572898441,
+  "decode_counter_tps": 47.75642397512221,
+  "preemptions": 0.0,
+  "answer_sha256": "d2c65921ab20df411c76a1191ca926847d236b89bf39e9a10aa226a7278e58f6"
+}

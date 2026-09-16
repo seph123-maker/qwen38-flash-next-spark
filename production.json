@@ -1,5 +1,5 @@
 {
-  "image_id": "sha256:256342813adc473736bf153e83b050a8e408da8c5ac7544bfbeeff397041853a",
+  "image_id": "sha256:11e907b55b7489d3ccec7f4d9cede4791ad1d7fd0a95252ee9ab6d8fb618dc59",
   "entrypoint": [
     "vllm",
     "serve"
@@ -15,7 +15,7 @@
     "--load-format",
     "safetensors",
     "--max-model-len",
-    "679000",
+    "500000",
     "--max-num-seqs",
     "8",
     "--gpu-memory-utilization",
@@ -25,36 +25,34 @@
     "--max-num-batched-tokens",
     "8192",
     "-cc.cudagraph_mode=PIECEWISE",
-    "-cc.splitting_ops=[\"vllm::unified_attention_with_output\",\"vllm::unified_mla_attention_with_output\",\"vllm::mamba_mixer2\",\"vllm::mamba_mixer\",\"vllm::short_conv\",\"vllm::qwen4_exp_compute_ple_ngram_ids\",\"vllm::qwen4_exp_ple_short_conv\",\"vllm::qwen4_exp_qsa_with_output\",\"vllm::linear_attention\",\"vllm::qwen_gdn_attention_core\",\"vllm::qwen_gdn_attention_core_fused_norm_packed\",\"vllm::sparse_attn_indexer\",\"vllm::ple_mmap_lookup_ids\"]",
+    "-cc.splitting_ops=[\"vllm::unified_attention_with_output\",\"vllm::unified_mla_attention_with_output\",\"vllm::mamba_mixer2\",\"vllm::mamba_mixer\",\"vllm::short_conv\",\"vllm::qwen3_8_flash_next_ple_short_conv\",\"vllm::qwen3_8_flash_next_qsa_with_output\",\"vllm::linear_attention\",\"vllm::qwen_gdn_attention_core\",\"vllm::qwen_gdn_attention_core_fused_norm_packed\",\"vllm::sparse_attn_indexer\",\"vllm::ple_mmap_lookup\"]",
     "--no-enable-flashinfer-autotune",
     "--kv-cache-dtype",
     "auto",
+    "--hf-overrides",
+    "{\"text_config\": {\"rope_parameters\": {\"mrope_interleaved\": true, \"mrope_section\": [11, 11, 10], \"rope_type\": \"yarn\", \"rope_theta\": 10000000, \"partial_rotary_factor\": 0.25, \"factor\": 4.0, \"original_max_position_embeddings\": 262144}}}",
     "--enable-auto-tool-choice",
     "--tool-call-parser",
     "qwen3_coder",
     "--reasoning-parser",
     "qwen3",
-    "--speculative-config",
-    "{\"method\": \"mtp\", \"num_speculative_tokens\": 3, \"max_model_len\": 679000}",
-    "--hf-overrides",
-    "{\"text_config\": {\"rope_parameters\": {\"mrope_interleaved\": true, \"mrope_section\": [11, 11, 10], \"rope_type\": \"yarn\", \"rope_theta\": 10000000, \"partial_rotary_factor\": 0.25, \"factor\": 4.0, \"original_max_position_embeddings\": 262144}}}",
-    "--kv-cache-memory-bytes",
-    "20809116549",
     "--chat-template",
-    "/qwen38/chat_template.jinja"
+    "/qwen38/chat_template.jinja",
+    "--speculative-config",
+    "{\"method\":\"mtp\",\"num_speculative_tokens\":2,\"max_model_len\":500000}"
   ],
   "environment": {
     "HF_HOME": "/hf",
     "HF_HUB_OFFLINE": "1",
     "PROMETHEUS_MULTIPROC_DIR": "/tmp/vllm-prometheus",
     "VLLM_ALLOW_LONG_MAX_MODEL_LEN": "1",
-    "VLLM_CACHE_ROOT": "/root/.cache/vllm",
     "VLLM_FP8_HYBRID": "1",
+    "VLLM_FP8_PAD_M4": "0",
+    "VLLM_MTP_DRAFT_VOCAB": "/opt/llm/draft_vocab_65536.npy",
     "VLLM_PLE_MMAP": "1",
     "VLLM_PLE_MMAP_FAST_ROWS": "0",
     "VLLM_PLE_MMAP_MADVISE": "random",
-    "VLLM_PLE_MMAP_PREWARM": "1",
-    "VLLM_PLE_MMAP_PROMETHEUS": "1",
+    "VLLM_PLE_MMAP_PREWARM": "0",
     "VLLM_PLE_MMAP_WORKERS": "32",
     "VLLM_QSA_DET_LIB": "/opt/llm/kernel-det/_C_det.so",
     "VLLM_QSA_DET_TOPK": "1",
@@ -66,5 +64,5 @@
   "shm_size": 17179869184,
   "ulimits": [],
   "restart": "unless-stopped",
-  "reduced_vocab_enabled": false
+  "reduced_vocab_enabled": true
 }

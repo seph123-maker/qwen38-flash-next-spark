@@ -1,0 +1,92 @@
+{
+  "id": "chatcmpl-b0184b72eae49665",
+  "object": "chat.completion",
+  "created": 1789544159,
+  "model": "qwen3.8-flash-next",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": null,
+        "refusal": null,
+        "annotations": null,
+        "audio": null,
+        "function_call": null,
+        "tool_calls": [
+          {
+            "id": "chatcmpl-tool-aec5c5e1ce1266ec",
+            "type": "function",
+            "function": {
+              "name": "search_files",
+              "arguments": "{\"query\": \"request_timeout\", \"glob\": \"src/**/*.py\", \"case_sensitive\": false}"
+            }
+          },
+          {
+            "id": "chatcmpl-tool-955140034d9fda70",
+            "type": "function",
+            "function": {
+              "name": "search_files",
+              "arguments": "{\"query\": \"retry_backoff\", \"glob\": \"src/**/*.py\", \"case_sensitive\": false}"
+            }
+          },
+          {
+            "id": "chatcmpl-tool-b33b133279903e33",
+            "type": "function",
+            "function": {
+              "name": "search_files",
+              "arguments": "{\"query\": \"prefix_cache\", \"glob\": \"tests/**/*.py\", \"case_sensitive\": false}"
+            }
+          },
+          {
+            "id": "chatcmpl-tool-aa6a9f779f045c26",
+            "type": "function",
+            "function": {
+              "name": "search_files",
+              "arguments": "{\"query\": \"tool_call_id\", \"glob\": \"src/**/*.py\", \"case_sensitive\": false}"
+            }
+          },
+          {
+            "id": "chatcmpl-tool-bbc9893eb058ac6c",
+            "type": "function",
+            "function": {
+              "name": "search_files",
+              "arguments": "{\"query\": \"max_tokens\", \"glob\": \"config/**/*.py\", \"case_sensitive\": false}"
+            }
+          },
+          {
+            "id": "chatcmpl-tool-96316e4d6183f45a",
+            "type": "function",
+            "function": {
+              "name": "search_files",
+              "arguments": "{\"query\": \"UnicodeDecodeError\", \"glob\": \"tests/**/*.py\", \"case_sensitive\": false}"
+            }
+          }
+        ],
+        "reasoning": "I need to call search_files six times with the exact arguments provided. Since they're independent, I can make all calls in the same block.\n"
+      },
+      "logprobs": null,
+      "finish_reason": "tool_calls",
+      "stop_reason": null,
+      "token_ids": null,
+      "routed_experts": null
+    }
+  ],
+  "service_tier": null,
+  "system_fingerprint": "vllm-0.1.dev20073+g8e685d198-ee7299af",
+  "usage": {
+    "prompt_tokens": 573,
+    "total_tokens": 926,
+    "completion_tokens": 353,
+    "prompt_tokens_details": null,
+    "completion_tokens_details": {
+      "reasoning_tokens": 30
+    }
+  },
+  "prompt_logprobs": null,
+  "prompt_token_ids": null,
+  "prompt_text": null,
+  "kv_transfer_params": null,
+  "ec_transfer_params": null,
+  "metrics": null
+}

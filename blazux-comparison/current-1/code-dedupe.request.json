@@ -1,0 +1,21 @@
+{
+  "model": "qwen3.8-flash-next",
+  "messages": [
+    {
+      "role": "system",
+      "content": "Fixture a9e5d8f455b19eb4fe0d71a0e3012364bb150a75aba863eebf4f553011ea8fa3. Follow the user request. Tool calls are returned to a test harness; it executes no external actions."
+    },
+    {
+      "role": "user",
+      "content": "Write only Python code defining dedupe(items): return a new list retaining the first occurrence of each value in its original order. Input values are hashable; do not mutate the input. No imports, explanations or tests."
+    }
+  ],
+  "temperature": 0,
+  "seed": 42,
+  "max_tokens": 4096,
+  "cache_salt": "8f32c5326d3f39ee9118c0b6a53672b9b3328e508f23ef5118352e8e2404c56d",
+  "chat_template_kwargs": {
+    "enable_thinking": true
+  },
+  "stream": false
+}

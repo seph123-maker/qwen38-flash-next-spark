@@ -1,0 +1,98 @@
+[
+  {
+    "id": "code-clamp",
+    "category": "code",
+    "grade": {
+      "pass": true,
+      "format_fenced": false,
+      "truncated": false
+    },
+    "seconds": 2.4635908269847278,
+    "prompt_tokens": 167,
+    "completion_tokens": 82,
+    "decode_counter_seconds": 2.162784849992022,
+    "decode_counter_tps": 37.914081005469626,
+    "preemptions": 0.0,
+    "answer_sha256": "34cc8b81f33d6bceaf2503d22e473d42ac3e770ee3a339ea18125d0c41e0091b"
+  },
+  {
+    "id": "code-dedupe",
+    "category": "code",
+    "grade": {
+      "pass": true,
+      "format_fenced": false,
+      "truncated": false
+    },
+    "seconds": 5.126651878992561,
+    "prompt_tokens": 174,
+    "completion_tokens": 188,
+    "decode_counter_seconds": 4.830937552003888,
+    "decode_counter_tps": 38.91584148547253,
+    "preemptions": 0.0,
+    "answer_sha256": "277c4be24c5ad827f6faea05b3804eda1545710e0c1af2e587955f04b46805d4"
+  },
+  {
+    "id": "long-32k",
+    "category": "long_context",
+    "grade": {
+      "pass": true,
+      "format_fenced": false,
+      "truncated": false
+    },
+    "seconds": 18.61700035800459,
+    "prompt_tokens": 32774,
+    "completion_tokens": 212,
+    "decode_counter_seconds": 4.926115990994731,
+    "decode_counter_tps": 43.03593345904769,
+    "preemptions": 0.0,
+    "answer_sha256": "6b86feefb9078263f65362399383a8f52ef5c9b93da7175513caf6f511213040"
+  },
+  {
+    "id": "reason-thinking-arithmetic",
+    "category": "reasoning_thinking",
+    "grade": {
+      "pass": true,
+      "format_fenced": false,
+      "truncated": false
+    },
+    "seconds": 1.4797740790236276,
+    "prompt_tokens": 68,
+    "completion_tokens": 57,
+    "decode_counter_seconds": 1.2461553010216448,
+    "decode_counter_tps": 45.740687339105534,
+    "preemptions": 0.0,
+    "answer_sha256": "11f49b3acda367abf3f4896be4e57545760d8353e288b80fdb493bec3803dc20"
+  },
+  {
+    "id": "tools-read",
+    "category": "tools",
+    "grade": {
+      "pass": true,
+      "format_fenced": false,
+      "truncated": false
+    },
+    "seconds": 8.138354027993046,
+    "prompt_tokens": 590,
+    "completion_tokens": 354,
+    "decode_counter_seconds": 7.605084994022036,
+    "decode_counter_tps": 46.54780324983364,
+    "preemptions": 0.0,
+    "answer_sha256": "5a0a2ad11496834f90b67618b953e9c637a6e606facf7bc1786a7df4ddcc51b4"
+  },
+  {
+    "id": "tools-search",
+    "category": "tools",
+    "grade": {
+      "pass": true,
+      "format_fenced": false,
+      "truncated": false
+    },
+    "seconds": 8.153205220995005,
+    "prompt_tokens": 573,
+    "completion_tokens": 354,
+    "decode_counter_seconds": 7.625481254013721,
+    "decode_counter_tps": 46.42329948862832,
+    "preemptions": 0.0,
+    "answer_sha256": "3f9201ed8dae07b6dc3e03d4b4a70e3f5b9192938aba826d94a49cddd260731f"
+  }
+]

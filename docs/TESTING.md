@@ -1,6 +1,8 @@
 [Home](../README.md) · [Setup](SETUP.md) · [Settings](CONFIGURATION.md) · [Tests](TESTING.md) · [Troubleshooting](TROUBLESHOOTING.md) · [Sources](SOURCES.md)
 
-## How we reached the current setup
+## Earlier runtime and drafting experiments
+
+These describe the former custom configuration. See the [latest Blazux-default comparison](BLAZUX-DEFAULTS.md) for the current selection.
 
 ### 1. Start from the working recipe
 

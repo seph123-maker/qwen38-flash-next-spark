@@ -1,0 +1,42 @@
+{
+  "id": "chatcmpl-8f5ba4cf70b1733d",
+  "object": "chat.completion",
+  "created": 1789544084,
+  "model": "qwen3.8-flash-next",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "\n\n{\n  \"owner\": \"Mira\",\n  \"remaining_budget\": 306500,\n  \"port\": 8000,\n  \"retries\": 3,\n  \"backoff_seconds\": 2,\n  \"context\": 500000,\n  \"next_task\": \"client timeout test\"\n}",
+        "refusal": null,
+        "annotations": null,
+        "audio": null,
+        "function_call": null,
+        "reasoning": "We need answer user's request. Need produce final only JSON object. Need extract authoritative handoff near beginning: owner=Mira; budget=480000; spent=173500; port=8000; retries=3; backoff_seconds=2; context=500000; next_task=client timeout test.\nNeed remaining_budget = budget - spent = 480000 - 173500 = 306500.\nKeys: owner, remaining_budget, port, retries, backoff_seconds, context, next_task. JSON object. Ensure no extra text.\n"
+      },
+      "logprobs": null,
+      "finish_reason": "stop",
+      "stop_reason": null,
+      "token_ids": null,
+      "routed_experts": null
+    }
+  ],
+  "service_tier": null,
+  "system_fingerprint": "vllm-0.1.dev20073+g8e685d198-ee7299af",
+  "usage": {
+    "prompt_tokens": 32774,
+    "total_tokens": 32997,
+    "completion_tokens": 223,
+    "prompt_tokens_details": null,
+    "completion_tokens_details": {
+      "reasoning_tokens": 140
+    }
+  },
+  "prompt_logprobs": null,
+  "prompt_token_ids": null,
+  "prompt_text": null,
+  "kv_transfer_params": null,
+  "ec_transfer_params": null,
+  "metrics": null
+}

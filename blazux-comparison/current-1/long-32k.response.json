@@ -1,0 +1,42 @@
+{
+  "id": "chatcmpl-b6429d2edddbf9a5",
+  "object": "chat.completion",
+  "created": 1789542839,
+  "model": "qwen3.8-flash-next",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "\n\n{\"owner\":\"Mira\",\"remaining_budget\":306500,\"port\":8000,\"retries\":3,\"backoff_seconds\":2,\"context\":500000,\"next_task\":\"client timeout test\"}",
+        "refusal": null,
+        "annotations": null,
+        "audio": null,
+        "function_call": null,
+        "reasoning": "The user wants me to extract specific values from the authoritative handoff section at the beginning of the text and return them as a JSON object.\n\nFrom the authoritative handoff:\n- owner=Mira\n- budget=480000\n- spent=173500\n- port=8000\n- retries=3\n- backoff_seconds=2\n- context=500000\n- next_task=client timeout test\n\nremaining_budget = budget - spent = 480000 - 173500 = 306500\n\nI need to return a JSON object with keys: owner, remaining_budget, port, retries, backoff_seconds, context, next_task.\n"
+      },
+      "logprobs": null,
+      "finish_reason": "stop",
+      "stop_reason": null,
+      "token_ids": null,
+      "routed_experts": null
+    }
+  ],
+  "service_tier": null,
+  "system_fingerprint": "vllm-0.29.0-7b540699",
+  "usage": {
+    "prompt_tokens": 32774,
+    "total_tokens": 32986,
+    "completion_tokens": 212,
+    "prompt_tokens_details": null,
+    "completion_tokens_details": {
+      "reasoning_tokens": 159
+    }
+  },
+  "prompt_logprobs": null,
+  "prompt_token_ids": null,
+  "prompt_text": null,
+  "kv_transfer_params": null,
+  "ec_transfer_params": null,
+  "metrics": null
+}

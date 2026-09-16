@@ -1,0 +1,16 @@
+{
+  "id": "reason-thinking-arithmetic",
+  "category": "reasoning_thinking",
+  "grade": {
+    "pass": true,
+    "format_fenced": false,
+    "truncated": false
+  },
+  "seconds": 1.57034997100709,
+  "prompt_tokens": 68,
+  "completion_tokens": 57,
+  "decode_counter_seconds": 1.2988778589933645,
+  "decode_counter_tps": 43.88403390306093,
+  "preemptions": 0.0,
+  "answer_sha256": "11f49b3acda367abf3f4896be4e57545760d8353e288b80fdb493bec3803dc20"
+}
