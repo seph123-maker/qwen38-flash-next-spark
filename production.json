@@ -1,5 +1,5 @@
 {
-  "image_id": "sha256:11e907b55b7489d3ccec7f4d9cede4791ad1d7fd0a95252ee9ab6d8fb618dc59",
+  "image_id": "sha256:6201e1bb4f9e201a23b894589562c59499a12ed06bd563e02b941df5c801af3d",
   "entrypoint": [
     "vllm",
     "serve"

@@ -24,7 +24,7 @@ def main():
     a.add_argument('--hf-cache',required=True)
     a.add_argument('--compile-cache',default='./compile-cache')
     a.add_argument('--name',default='qwen38-published')
-    a.add_argument('--image',default='qwen38-published:20260916')
+    a.add_argument('--image',default='qwen38-published:20260919')
     a.add_argument('--port',type=int,default=8000)
     a.add_argument('--dry-run',action='store_true')
     args=a.parse_args();p,hf,cache,cmd=command(args)

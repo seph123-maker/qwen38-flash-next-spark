@@ -1,6 +1,6 @@
 # Credits and historical contributions
 
-Current serving code is the unmodified [Blazux ed65cc8 snapshot](https://github.com/blazux/qwen3.8-Flash-DGX/tree/ed65cc80646e85cf6631b93d7dfcf9412183cc30). Its [upstream credits](upstream-blazux/README.md#credits) and license notices are preserved. The table below also records contributors to our former custom v0.29 image; it is not a list of patches all applied to the current preview image.
+Current serving code is the unmodified [Blazux 5be6637 snapshot](https://github.com/blazux/qwen3.8-Flash-DGX/tree/5be66376e8beaf96655f2d5682c82d538a970e66). Its [upstream credits](upstream-blazux/README.md#credits) and license notices are preserved. The table below also records contributors to our former custom v0.29 image; it is not a list of patches all applied to the current preview image.
 
 
 | Contribution | Source |

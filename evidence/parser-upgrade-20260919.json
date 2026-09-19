@@ -1,0 +1,89 @@
+{
+  "upstream_revision": "5be66376e8beaf96655f2d5682c82d538a970e66",
+  "parser_regression_passes": 30,
+  "serving_checks": [
+    {
+      "id": "code-clamp",
+      "category": "code",
+      "grade": {
+        "pass": true,
+        "format_fenced": false,
+        "truncated": false
+      },
+      "seconds": 3.2421790300286375,
+      "prompt_tokens": 167,
+      "completion_tokens": 115,
+      "preemptions": 0.0
+    },
+    {
+      "id": "code-dedupe",
+      "category": "code",
+      "grade": {
+        "pass": true,
+        "format_fenced": false,
+        "truncated": false
+      },
+      "seconds": 5.147896134993061,
+      "prompt_tokens": 174,
+      "completion_tokens": 196,
+      "preemptions": 0.0
+    },
+    {
+      "id": "long-32k",
+      "category": "long_context",
+      "grade": {
+        "pass": true,
+        "format_fenced": false,
+        "truncated": false
+      },
+      "seconds": 20.649014362017624,
+      "prompt_tokens": 32774,
+      "completion_tokens": 223,
+      "preemptions": 0.0
+    },
+    {
+      "id": "reason-thinking-arithmetic",
+      "category": "reasoning_thinking",
+      "grade": {
+        "pass": true,
+        "format_fenced": false,
+        "truncated": false
+      },
+      "seconds": 1.5021410019835457,
+      "prompt_tokens": 68,
+      "completion_tokens": 57,
+      "preemptions": 0.0
+    },
+    {
+      "id": "tools-read",
+      "category": "tools",
+      "grade": {
+        "pass": true,
+        "format_fenced": false,
+        "truncated": false
+      },
+      "seconds": 8.726732618000824,
+      "prompt_tokens": 590,
+      "completion_tokens": 351,
+      "preemptions": 0.0
+    },
+    {
+      "id": "tools-search",
+      "category": "tools",
+      "grade": {
+        "pass": true,
+        "format_fenced": false,
+        "truncated": false
+      },
+      "seconds": 8.300650512974244,
+      "prompt_tokens": 573,
+      "completion_tokens": 353,
+      "preemptions": 0.0
+    }
+  ],
+  "health_http": 200,
+  "configuration_changed": [
+    "image_id"
+  ],
+  "comparison_benchmark": false
+}

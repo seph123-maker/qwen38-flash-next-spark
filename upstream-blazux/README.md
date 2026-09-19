@@ -37,7 +37,7 @@ be overridden on the command line (`./flash serve default MTP=3 PORT=18301`). `.
 The same thing by hand, unchanged and still supported (everything `flash` does is these scripts):
 
 ```bash
-docker build -t qwen38-flash-dgx .            # ~1 min: official vLLM image + the 10 patches below
+docker build -t qwen38-flash-dgx .            # ~1 min: official vLLM image + the 12 patches below
 scripts/download-weights.sh                   # nvidia/Qwen3.8-Flash-Next-NVFP4, ~124 GiB via Xet, resumable (one-time)
 scripts/prepare-hybrid.sh                     # recommended: fp8 side layers, +20% decode, same quality (~10 min, one-time)
 MODE=hybrid YARN=1 CTX=500000 scripts/serve.sh   # the recipe our own box runs; 500k context, ~13 min to load
@@ -65,6 +65,68 @@ Everything below is the long version: what was broken on GB10, what was fixed, a
 > [@jschmied](https://github.com/jschmied) — see
 > [issue #1](https://github.com/blazux/qwen3.8-Flash-DGX/issues/1) and their
 > [write-up](https://github.com/jschmied/qwen38-flash-next-gb10).
+
+## Quoted tool markers
+
+Both image recipes include a parser fix for literal or malformed `<tool_call>`
+markers in Qwen reasoning and ordinary text. Previously, quoting that marker could
+switch the parser into a tool preamble and discard subsequent text, including a
+final answer after `</think>`. The parser now buffers the marker and preserves it as text when ordinary prose
+follows, while recognizing a function-header prefix (`<function=`) as a tool call.
+Valid calls and existing empty-wrapper/end-of-stream handling are retained.
+The fix is enabled for the `qwen3` parser; derived parser configurations retain
+their existing behavior.
+
+That fix covers a marker followed by ordinary prose. It does not cover a marker
+followed by a well-formed function header — which is exactly what the model writes
+when it *documents* the format, inside a ```` ```xml ```` block or while reasoning
+about tool syntax. There the parser confirms the call, and everything after it is
+consumed as tool-call syntax: with tools in the request you get a tool call the
+model never meant to make, and without them the serving layer drops the call and
+returns `content: null`, so the whole answer disappears. The visible output stops at
+the fence opener, which is why this reads as "output dies on a backtick".
+
+Patch 13 adds a second guard, also `qwen3`-only:
+
+- **Inside a fenced code block**, `<tool_call>` and `<function=` stay text and open
+  no call. Fences follow CommonMark: a run of three or more backticks or tildes at
+  the start of a line (at most three spaces of indent) opens one, and only a run of
+  the same character at least as long, with nothing but whitespace after it, closes
+  it — so a ```` ```xml ```` block nested inside a ````` ````md ````` block does not
+  close the outer one. Fence state is per channel and is re-synced on use, so a
+  fence left open in reasoning never carries into the answer, even when the call
+  follows `</think>` with nothing in between.
+- **A wrapper-less `<function=` header** opens a call only at the start of a line.
+  Mid-line it is prose naming the marker. This is the `(CONTENT, FUNC_PREFIX)`
+  fallback, which patch 12 does not guard at all.
+
+Not covered, both deliberate:
+
+- Illustrative `<tool_call>` XML written in reasoning *outside* a fence still opens
+  a call. Suppressing that would mean dropping the reasoning → tool-call transition,
+  which this model does use.
+- A fence the model opens and never closes keeps the guard active for the rest of
+  the turn, so a real tool call after it is returned as text instead of being
+  parsed. That is the cost of deciding from the text alone;
+  `test_unclosed_fence_suppresses_later_calls` asserts it so a change is deliberate.
+
+The regression patches extend vLLM's Qwen parser tests. To run them from a matching
+vLLM source checkout with its test dependencies installed (using absolute paths to
+this repository's patch files):
+
+```bash
+patch --batch --forward --fuzz=0 -p1 < /path/to/qwen3.8-Flash-DGX/src/patches/qwen-tool-preamble.patch
+patch --batch --forward --fuzz=0 -p1 < /path/to/qwen3.8-Flash-DGX/src/patches/qwen-tool-preamble-tests.patch
+patch --batch --forward --fuzz=0 -p1 < /path/to/qwen3.8-Flash-DGX/src/patches/qwen-tool-marker-guard.patch
+patch --batch --forward --fuzz=0 -p1 < /path/to/qwen3.8-Flash-DGX/src/patches/qwen-tool-marker-guard-tests.patch
+.venv/bin/python -m pytest tests/parser/engine -q
+```
+
+Patch 13's own module, `tests/parser/engine/test_qwen3_literal_markers.py`, is 30
+cases over three chunk sizes: 21 fail and 9 pass on patch 12 alone, all 30 pass with
+patch 13. The 9 that pass either way are the no-regression guards — a real call
+still parses, a real call after a closed fence still parses, and patch 12's own
+inline-quoted-marker case is unchanged.
 
 ## Update 2026-09-14 — NVIDIA's checkpoint is the default
 

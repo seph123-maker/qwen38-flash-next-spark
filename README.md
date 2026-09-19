@@ -4,6 +4,10 @@ A tested **Blazux-default serving configuration with Drowzeys' NVIDIA-derived ab
 
 This is based on [Blazux's work](https://github.com/blazux/qwen3.8-Flash-DGX), not a claim to have invented a new inference stack. [Credits](CREDITS.md) · [Sources](docs/SOURCES.md).
 
+## September 19 update
+
+Installed upstream tool-parser fixes. **30/30 parser regression cases and 6/6 serving checks passed.** Model, context, KV sizing and drafting settings are unchanged. This is a correctness update; no speed gain is claimed. [Details, credits and limitations](docs/PARSER-UPDATE.md).
+
 ## Start here
 
 | Need | Guide |
@@ -19,7 +23,7 @@ This is based on [Blazux's work](https://github.com/blazux/qwen3.8-Flash-DGX), n
 
 | Component | Value |
 |---|---|
-| Serving source | Blazux `ed65cc80646e85cf6631b93d7dfcf9412183cc30`, default preview Dockerfile |
+| Serving source | Blazux `5be66376e8beaf96655f2d5682c82d538a970e66`, default preview Dockerfile |
 | Weights | Drowzeys `a393318fb56d9aedc56d91b6f4962d9af26d2fe7`, locally prepared FP8 hybrid |
 | Maximum total context | **500,000 tokens**, YaRN factor 4 |
 | KV cache | BF16; automatic sizing at utilization **0.80** |
@@ -46,7 +50,7 @@ Selected by user preference after successful testing. Generation was faster in t
 ## Reproduce and audit
 
 ```bash
-docker build -f upstream-blazux/Dockerfile -t qwen38-published:20260916 upstream-blazux
+docker build -f upstream-blazux/Dockerfile -t qwen38-published:20260919 upstream-blazux
 ```
 
 Follow [setup](docs/SETUP.md) for model access, pinned download, hybrid conversion and launch. The upstream source built and ran on the Spark; a clean end-to-end reproduction from this public checkout has not been independently repeated.

@@ -4,7 +4,7 @@
 
 ## Current serving inputs
 
-Current source: [Blazux ed65cc8](https://github.com/blazux/qwen3.8-Flash-DGX/tree/ed65cc80646e85cf6631b93d7dfcf9412183cc30), bundled under [upstream-blazux](../upstream-blazux/). Base: `vllm/vllm-openai:qwen38-flash-next@sha256:fc120ece0a388cc0aa1caad4a9f1cd92113484ab7ec2fd0efadd62585be05bf8`. Built image ID: `sha256:11e907b55b7489d3ccec7f4d9cede4791ad1d7fd0a95252ee9ab6d8fb618dc59`. Current exact launch: [production.json](../production.json). Our selection uses the upstream preview recipe, plus supported model/cache/metrics options.
+Current source: [Blazux 5be6637](https://github.com/blazux/qwen3.8-Flash-DGX/tree/5be66376e8beaf96655f2d5682c82d538a970e66), bundled under [upstream-blazux](../upstream-blazux/). Base: `vllm/vllm-openai:qwen38-flash-next@sha256:fc120ece0a388cc0aa1caad4a9f1cd92113484ab7ec2fd0efadd62585be05bf8`. Built image ID: `sha256:6201e1bb4f9e201a23b894589562c59499a12ed06bd563e02b941df5c801af3d`. Current exact launch: [production.json](../production.json). Our selection uses the upstream preview recipe, plus supported model/cache/metrics options. The deployed image layers patches 12 and 13 on the previous ed65cc8 image; the bundled 5be6637 Dockerfile builds the corresponding complete source recipe. See [parser update](PARSER-UPDATE.md).
 
 ## Two separate things: serving code and model weights
 
