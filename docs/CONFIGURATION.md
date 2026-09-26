@@ -1,3 +1,7 @@
+# September 26 update
+
+The new default is [recipe-v030.json](../recipe-v030.json), using unmodified [Blazux v0.30 source](../upstream-blazux-v030/) at `5108d90dedf15a31aa20432319f151b2fdda17a3`. Model/API/context/cache/drafting settings remain the same; graph operator names now match v0.30. Image build and inference validation are pending. The settings and image hashes below describe the **historical September 19 preview**, retained for audit. See [the update record](UPDATE-20260926.md).
+
 [Home](../README.md) · [Setup](SETUP.md) · [Settings](CONFIGURATION.md) · [Tests](TESTING.md) · [Troubleshooting](TROUBLESHOOTING.md) · [Sources](SOURCES.md)
 
 ## Exact settings for reproduction

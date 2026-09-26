@@ -1,10 +1,14 @@
 # Qwen3.8-Flash-Next on one DGX Spark
 
-A tested **Blazux-default serving configuration with Drowzeys' NVIDIA-derived abliterated weights** on one GB10 system. The September 16 selection uses a pinned Blazux preview image, FP8 hybrid side layers, automatic KV allocation, two-token speculative drafting and a reduced draft vocabulary.
+A **Blazux-based recipe with Drowzeys' NVIDIA-derived abliterated weights** on one GB10 system. The September 26 update adds a pinned vLLM 0.30 source recipe with faster loading and optional FP8 KV support. **This new build has not yet been built or run locally.** The September-tested preview recipe and its results remain available separately. This repository does not describe the maintainer's current live Hasso/SGLang deployment.
 
 This is based on [Blazux's work](https://github.com/blazux/qwen3.8-Flash-DGX), not a claim to have invented a new inference stack. [Credits](CREDITS.md) · [Sources](docs/SOURCES.md).
 
-## September 19 update
+## September 26 source update
+
+The default launcher now selects the v0.30 candidate. It keeps the same checkpoint revision, API name/port, 500k context, YaRN factor 4, BF16 cache and two-token drafting. [Changes, upstream measurements, validation status and rollback](docs/UPDATE-20260926.md). No new local speed or quality claim is made.
+
+## September 19 historical update
 
 Installed upstream tool-parser fixes. **30/30 parser regression cases and 6/6 serving checks passed.** Model, context, KV sizing and drafting settings are unchanged. This is a correctness update; no speed gain is claimed. [Details, credits and limitations](docs/PARSER-UPDATE.md).
 
@@ -14,16 +18,16 @@ Installed upstream tool-parser fixes. **30/30 parser regression cases and 6/6 se
 |---|---|
 | Build and run | [Setup](docs/SETUP.md) |
 | Latest comparison and decision | [Blazux-default comparison](docs/BLAZUX-DEFAULTS.md) |
-| Exact settings | [Configuration](docs/CONFIGURATION.md), [production.json](production.json) |
+| Exact settings | [Configuration](docs/CONFIGURATION.md), [recipe-v030.json](recipe-v030.json) |
 | Hermes/API connection | [Usage](docs/USAGE.md) |
 | Earlier tests | [Runtime/drafting history](docs/TESTING.md), [PLE comparison](docs/PLE-GATHER.md), [Drowzeys/679k](docs/DROWZEYS-679K.md) |
 | Troubleshooting and terminology | [Troubleshooting](docs/TROUBLESHOOTING.md), [Glossary](docs/GLOSSARY.md) |
 
-## Selected configuration
+## September 26 candidate configuration
 
 | Component | Value |
 |---|---|
-| Serving source | Blazux `5be66376e8beaf96655f2d5682c82d538a970e66`, default preview Dockerfile |
+| Serving source | Blazux `5108d90dedf15a31aa20432319f151b2fdda17a3`, `Dockerfile.v0.30` |
 | Weights | Drowzeys `a393318fb56d9aedc56d91b6f4962d9af26d2fe7`, locally prepared FP8 hybrid |
 | Maximum total context | **500,000 tokens**, YaRN factor 4 |
 | KV cache | BF16; automatic sizing at utilization **0.80** |
@@ -32,9 +36,9 @@ Installed upstream tool-parser fixes. **30/30 parser regression cases and 6/6 se
 | Attention / prefix caching | Deterministic top-k enabled; prefix caching enabled |
 | Optional upstream features retained | Persistent compilation caches, Prometheus multiprocess export |
 
-The trial boot allocated **19.21 GiB KV / 710,606 reported cache tokens**. Automatic allocation may differ after another restart; that figure is not the configured request limit. The launcher also preserves upstream-supported effort aliases. Image and weights remain separately pinned.
+The **historical preview** trial boot reported **19.21 GiB KV / 710,606 cache tokens**. This is not a v0.30 capacity promise; upstream now explains that slow-load swap can inflate automatic sizing. Automatic allocation may differ after another restart; that figure is not the configured request limit. The launcher also preserves upstream-supported effort aliases. Image and weights remain separately pinned.
 
-## Latest measured comparison
+## Historical measured comparison (preview, not v0.30)
 
 | Measurement | Previous custom v0.29 / K3 / 679k | Blazux defaults / K2 / 500k |
 |---|---:|---:|
@@ -50,11 +54,11 @@ Selected by user preference after successful testing. Generation was faster in t
 ## Reproduce and audit
 
 ```bash
-docker build -f upstream-blazux/Dockerfile -t qwen38-published:20260919 upstream-blazux
+docker build -f upstream-blazux-v030/Dockerfile.v0.30 -t qwen38-published:20260926-v030 upstream-blazux-v030
 ```
 
-Follow [setup](docs/SETUP.md) for model access, pinned download, hybrid conversion and launch. The upstream source built and ran on the Spark; a clean end-to-end reproduction from this public checkout has not been independently repeated.
+Follow [setup](docs/SETUP.md) for model access, pinned download, hybrid conversion and launch. The v0.30 source is published for reproduction; its ARM64 image build and execution with these weights are still pending. Existing benchmark results apply only to their recorded older configurations.
 
-[benchmark/](benchmark/) includes synthetic fixtures and scoring/measurement scripts; [blazux-comparison/](blazux-comparison/) contains saved requests, responses, metrics and grades for both arms. Older [evidence summaries](evidence/) remain available. Historical custom build files remain under [upstream/](upstream/); current pinned upstream files are under [upstream-blazux/](upstream-blazux/).
+[benchmark/](benchmark/) includes synthetic fixtures and scoring/measurement scripts; [blazux-comparison/](blazux-comparison/) contains saved requests, responses, metrics and grades for both arms. Older [evidence summaries](evidence/) remain available. Historical custom build files remain under [upstream/](upstream/); September 19 source is under [upstream-blazux/](upstream-blazux/); the new unmodified snapshot is under [upstream-blazux-v030/](upstream-blazux-v030/).
 
 Weights are not redistributed. Their gated access and model-license terms apply separately from code licensing. See [sources and licenses](docs/SOURCES.md).

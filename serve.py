@@ -4,7 +4,8 @@ import argparse,json,pathlib,subprocess,shlex
 from effort_alias import prepare
 
 def command(args):
-    p=json.loads((pathlib.Path(__file__).parent/'production.json').read_text())
+    filename='recipe-v030.json' if args.profile=='v030' else 'production.json'
+    p=json.loads((pathlib.Path(__file__).parent/filename).read_text())
     hf=pathlib.Path(args.hf_cache).expanduser().resolve()
     cache=pathlib.Path(args.compile_cache).expanduser().resolve()
     cmd=['docker','run','-d','--name',args.name,'--restart',p['restart'],
@@ -16,7 +17,8 @@ def command(args):
     template=cache/'chat-templates'/'effort-alias.jinja'
     cmd+=['-v',f'{template}:/qwen38/chat_template.jinja:ro']
     # Docker accepts one entrypoint executable; preserve the remaining argv.
-    cmd+=['--entrypoint',p['entrypoint'][0],args.image]+p['entrypoint'][1:]+p['command']
+    image=args.image or ('qwen38-published:20260926-v030' if args.profile=='v030' else 'qwen38-published:20260919')
+    cmd+=['--entrypoint',p['entrypoint'][0],image]+p['entrypoint'][1:]+p['command']
     return p,hf,cache,cmd
 
 def main():
@@ -24,7 +26,8 @@ def main():
     a.add_argument('--hf-cache',required=True)
     a.add_argument('--compile-cache',default='./compile-cache')
     a.add_argument('--name',default='qwen38-published')
-    a.add_argument('--image',default='qwen38-published:20260919')
+    a.add_argument('--profile',choices=['v030','legacy'],default='v030')
+    a.add_argument('--image')
     a.add_argument('--port',type=int,default=8000)
     a.add_argument('--dry-run',action='store_true')
     args=a.parse_args();p,hf,cache,cmd=command(args)

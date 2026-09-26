@@ -1,6 +1,8 @@
 [Home](../README.md) · [Setup](SETUP.md) · [Settings](CONFIGURATION.md) · [Tests](TESTING.md) · [Troubleshooting](TROUBLESHOOTING.md) · [Sources](SOURCES.md)
 
-# Set up the tested configuration
+# Set up the v0.30 candidate
+
+**Status:** source/configuration checks only; no local image build or inference validation yet. Historical validated settings are in `production.json`; use `--profile legacy` with the September 19 image to reproduce those.
 
 Run these commands on the Linux ARM64 Spark, from a clone of this repository. They install a full model server; they are not commands for the Windows machine used to browse this guide.
 
@@ -11,12 +13,12 @@ cd qwen38-flash-next-spark
 
 ## Build and launch
 
-Requires an ARM64 GB10 system, Docker with NVIDIA GPU support, Python 3, and the pinned checkpoint prepared with the included hybrid converter. Weights are not distributed in this package. This build recipe matches the production sources; a clean build of this publication bundle has not been rerun. Build output hashes can differ even with pinned inputs.
+Requires an ARM64 GB10 system, Docker with NVIDIA GPU support, Python 3, and the pinned checkpoint prepared with the included hybrid converter. Weights are not distributed in this package. This source recipe follows the pinned upstream v0.30 integration; it is not the current live deployment. Build output hashes can differ even with pinned inputs.
 
 From this directory:
 
 ```bash
-docker build -f upstream-blazux/Dockerfile -t qwen38-published:20260919 upstream-blazux
+docker build -f upstream-blazux-v030/Dockerfile.v0.30 -t qwen38-published:20260926-v030 upstream-blazux-v030
 ```
 
 Use an isolated Hugging Face cache when preparing the pinned revision. With the Hugging Face CLI installed and model access accepted where required:
@@ -25,13 +27,13 @@ Use an isolated Hugging Face cache when preparing the pinned revision. With the 
 export HF_CACHE="$PWD/model-cache"
 export MODEL=drowzeys/keys-Qwen3.8-Flash-Next-NVFP4-dual-ablit-house-qsa-L3-47
 hf download "$MODEL" --revision a393318fb56d9aedc56d91b6f4962d9af26d2fe7 --cache-dir "$HF_CACHE/hub"
-( cd upstream-blazux && IMAGE=qwen38-published:20260919 bash scripts/prepare-hybrid.sh )
+( cd upstream-blazux-v030 && IMAGE=qwen38-published:20260926-v030 bash scripts/prepare-hybrid.sh )
 python3 serve.py --hf-cache "$HF_CACHE" --compile-cache "$PWD/compile-cache"
 ```
 
-The preparation script selects the downloaded snapshot and creates its `-fp8hybrid` sibling. The launcher pins that exact sibling. If using a populated cache containing other revisions, explicitly verify which snapshot the converter selected. The converter uses source-relative tools, so run it from `upstream-blazux` as shown. It is a one-time weight conversion, not part of server startup.
+The preparation script selects the downloaded snapshot and creates its `-fp8hybrid` sibling. The launcher pins that exact sibling. If using a populated cache containing other revisions, explicitly verify which snapshot the converter selected. The converter uses source-relative tools, so run it from `upstream-blazux-v030` as shown. It is a one-time weight conversion, not part of server startup.
 
-The launcher refuses to replace an existing container. Allow the current model server to finish requests and stop it before loading this full model on the same Spark. First weight loading on this system took roughly 8–13 minutes. The API binds all interfaces without authentication, matching the measured configuration; choose network exposure appropriate to your deployment.
+The launcher refuses to replace an existing container. Allow the current model server to finish requests and stop it before loading this full model on the same Spark. Upstream reports approximately 3–4 minute boots after the new loading patches; startup on this checkpoint has not been measured. The API binds all interfaces without authentication, matching the measured configuration; choose network exposure appropriate to your deployment.
 
 ```bash
 docker logs -f qwen38-published

@@ -1,3 +1,7 @@
+# September 26 additions
+
+The v0.30 candidate vendors [Blazux 5108d90](https://github.com/blazux/qwen3.8-Flash-DGX/tree/5108d90dedf15a31aa20432319f151b2fdda17a3) without source modifications. Upstream license and credits are preserved in [the snapshot](upstream-blazux-v030/README.md). Credit **Willian-Zhang** for loading patches 14–18 ([PR 33](https://github.com/blazux/qwen3.8-Flash-DGX/pull/33), [PR 34](https://github.com/blazux/qwen3.8-Flash-DGX/pull/34)), **Blazux** for v0.30 integration and the FP8 KV port, and **Nanetnounou** for the earlier FP8 KV patch credited upstream. FP8 KV is included but remains disabled in our default. The following deployment descriptions and image references are historical.
+
 # Credits and historical contributions
 
 Current serving code is the unmodified [Blazux 5be6637 snapshot](https://github.com/blazux/qwen3.8-Flash-DGX/tree/5be66376e8beaf96655f2d5682c82d538a970e66). Its [upstream credits](upstream-blazux/README.md#credits) and license notices are preserved. The table below also records contributors to our former custom v0.29 image; it is not a list of patches all applied to the current preview image.
