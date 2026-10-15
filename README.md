@@ -4,6 +4,13 @@ A **Blazux-based recipe with Drowzeys' NVIDIA-derived abliterated weights** on o
 
 This is based on [Blazux's work](https://github.com/blazux/qwen3.8-Flash-DGX), not a claim to have invented a new inference stack. [Credits](CREDITS.md) · [Sources](docs/SOURCES.md).
 
+## October 15 staged update (proposed, not yet applied)
+
+Context & KV-cache upgrade: YaRN factor corrected 4.0→2.0 @ 524,288, fp8_e4m3 KV
+(≈2.1× paged pool, in-kernel dequant verified in build source), seqs 8→4, PLE mmap
+knobs to code-defaults. [Changes, gates, rollback](docs/UPDATE-20261015.md) ·
+[before](config/active-20261014.json) / [after](config/proposed-20261015.json) configs.
+
 ## September 26 source update
 
 The default launcher now selects the v0.30 candidate. It keeps the same checkpoint revision, API name/port, 500k context, YaRN factor 4, BF16 cache and two-token drafting. [Changes, upstream measurements, validation status and rollback](docs/UPDATE-20260926.md). No new local speed or quality claim is made.
