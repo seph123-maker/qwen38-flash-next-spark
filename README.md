@@ -4,12 +4,13 @@ A **Blazux-based recipe with Drowzeys' NVIDIA-derived abliterated weights** on o
 
 This is based on [Blazux's work](https://github.com/blazux/qwen3.8-Flash-DGX), not a claim to have invented a new inference stack. [Credits](CREDITS.md) · [Sources](docs/SOURCES.md).
 
-## October 15 staged update (proposed, not yet applied)
+## October 15 update (APPLIED — v2.1 live)
 
 Context & KV-cache upgrade: YaRN factor corrected 4.0→2.0 @ 524,288, fp8_e4m3 KV
-(≈2.1× paged pool, in-kernel dequant verified in build source), seqs 8→4, PLE mmap
-knobs to code-defaults. [Changes, gates, rollback](docs/UPDATE-20261015.md) ·
-[before](config/active-20261014.json) / [after](config/proposed-20261015.json) configs.
+(pooled **1.068M tokens**, 2.03× concurrency — measured), seqs 8→4, PLE mmap dispatch tuning.
+[Changes, measurements, gates, rollback](docs/UPDATE-20261015.md) ·
+[before](config/active-20261014.json) / [after](config/active-20261015.json) configs ·
+[execution log incl. one failed rollout round](docs/EXECUTION-LOG-20261015.md).
 
 ## September 26 source update
 

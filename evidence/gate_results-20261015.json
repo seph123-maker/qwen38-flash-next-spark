@@ -1,0 +1,46 @@
+{
+ "run_at": "2026-10-15T05:42:00Z",
+ "baseline": {
+  "gold_trace_tokens": 32776,
+  "mean_nll_nats_per_tok": 2.99899,
+  "decode_1024_toks_per_s": 43.56,
+  "wall_s": 23.5,
+  "drafts": 0,
+  "accepted": 0,
+  "tok_per_pass": null,
+  "captured_utc": "2026-10-15T03:21:05Z"
+ },
+ "gates": {
+  "gate2": {
+   "kv_pool_tokens": 1068740,
+   "pool_logged_at": "",
+   "swap_used_bytes": 155471872,
+   "mem_available_kib": 16151308,
+   "verdict": "ABORT"
+  },
+  "gate1": {
+   "tok_per_s": 6.81,
+   "baseline_tok_per_s": 43.56,
+   "gather_ms_per_op": 375.51,
+   "major_faults_1024tok": 1463331,
+   "verdict": "FALLBACK:FAST_ROWS=256"
+  },
+  "gate3a": {
+   "nll": 3.10911,
+   "baseline": 2.99899,
+   "delta": 0.11012,
+   "verdict": "FAIL"
+  },
+  "gate3b": {
+   "context_tokens": 198819,
+   "blocks": 12,
+   "exact_match": true,
+   "verdict": "PASS"
+  },
+  "gate4": {
+   "first_token_logprob_delta": 0.0,
+   "greedy32_identical": true,
+   "verdict": "PASS"
+  }
+ }
+}
