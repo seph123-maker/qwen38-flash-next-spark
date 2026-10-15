@@ -5,11 +5,11 @@
 import json, re, subprocess, sys, time, urllib.request
 
 NAME, ROLLBACK = "qwen38-flash", "qwen38-flash-ROLLBACK-1015"
-ENV_SET = {"VLLM_PLE_MMAP_WORKERS": "16", "VLLM_PLE_MMAP_FAST_ROWS": "512"}   # VLLM_QSA_DET_LIB & draft-vocab paths carried verbatim
+ENV_SET = {"VLLM_PLE_MMAP_WORKERS": "16", "VLLM_PLE_MMAP_FAST_ROWS": "256"}  # v2.1: FAST_ROWS=512 inline measured 6.8-7.4 ms/op (gate1 fallback branch) -> route 384-row decode gathers through 16-worker pool
 CMD_VALUE_SET = {"--max-model-len": "524288", "--max-num-seqs": "4", "--kv-cache-dtype": "fp8_e4m3"}
-CMD_REGEX_SET = {  # (arg-name, pattern, replacement) — must hit exactly once or we abort
-    "--hf-overrides":   (r'"factor":\s*4\.0', '"factor": 2.0'),
-    "--speculative-config": (r'"max_model_len":\s*500000', '"max_model_len": 524288'),
+CMD_REGEX_SET = {  # (arg-name, pattern, replacement) — must hit exactly once or we abort; idempotent (accepts pre- and post-v2 values)
+    "--hf-overrides":   (r'"factor":\s*(?:4|2)\.0', '"factor": 2.0'),
+    "--speculative-config": (r'"max_model_len":\s*(?:500000|524288)', '"max_model_len": 524288'),
 }
 
 def sh(*a, check=True):
@@ -58,6 +58,7 @@ def derive():
     for c in hc.get("CapAdd") or []: args += ["--cap-add", c]
     for c in hc.get("CapDrop") or []: args += ["--cap-drop", c]
     for s in hc.get("SecurityOpt") or []: args += ["--security-opt", s]
+    for tp, opts in (hc.get("Tmpfs") or {}).items(): args += ["--tmpfs", f"{tp}:{opts}" if opts else tp]
     if hc.get("Devices"):
         for dv in hc["Devices"]: args += ["--device", f"{dv['PathOnHost']}:{dv['PathInContainer']}:{dv.get('CgroupPermissions','rwm')}"]
     for e in env:
@@ -77,6 +78,14 @@ def running(name):
     except SystemExit: return False
 
 mode = sys.argv[1] if len(sys.argv) > 1 else "diff"
+
+if mode == "rollback":
+    if running(NAME): sh("docker", "stop", NAME)
+    sh("docker", "rename", NAME, "qwen38-flash-FAILED-1015", check=False)
+    sh("docker", "rename", ROLLBACK, NAME)
+    sh("docker", "start", NAME)
+    print("rolled back to pre-v2 container"); sys.exit(0)
+
 cmd, env, args, ignored = derive()
 
 if mode == "diff":
@@ -99,7 +108,16 @@ if mode == "rollback":
     print("rolled back to pre-v2 container"); sys.exit(0)
 
 # apply
-if running(ROLLBACK): sys.exit("ABORT: rollback container already exists — resolve manually")
+def remove_if_exited(name):
+    try:
+        if sh("docker", "inspect", "--format", "{{.State.Running}}", name).strip() == "true":
+            sys.exit(f"ABORT: {name} exists and is RUNNING — resolve manually")
+        sh("docker", "rm", name, check=False)  # exited leftovers: ROLLBACK copy == live config (duplicate); FAILED == broken v2
+    except SystemExit as e:
+        if str(e).startswith("ABORT"): raise
+        # inspect failed => container absent, fine
+remove_if_exited(ROLLBACK)
+remove_if_exited("qwen38-flash-FAILED-1015")
 sh("docker", "rename", NAME, ROLLBACK)
 sh("docker", "stop", ROLLBACK)
 t0 = time.time()
