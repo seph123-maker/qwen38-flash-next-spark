@@ -1,72 +1,50 @@
 # Qwen3.8-Flash-Next on one DGX Spark
 
-A **Blazux-based recipe with Drowzeys' NVIDIA-derived abliterated weights** on one GB10 system. The September 26 update adds a pinned vLLM 0.30 source recipe with faster loading and optional FP8 KV support. **This new build has not yet been built or run locally.** The September-tested preview recipe and its results remain available separately. This repository does not describe the maintainer's current live Hasso/SGLang deployment.
+The recipe for running an abliterated NVIDIA Qwen3.8-Flash-Next NVFP4 at **524,288-token
+context with a 1,068,740-token KV pool** on a single GB10 (DGX Spark), with 47.7 GiB of
+NVMe-streamed n-gram (PLE) memory. Based on [Blazux's work](https://github.com/blazux/qwen3.8-Flash-DGX)
+and NVIDIA's public checkpoint — not a claim to have invented a new inference stack.
+[Credits](CREDITS.md) · [Sources](docs/SOURCES.md).
 
-This is based on [Blazux's work](https://github.com/blazux/qwen3.8-Flash-DGX), not a claim to have invented a new inference stack. [Credits](CREDITS.md) · [Sources](docs/SOURCES.md).
+## Current headline numbers (measured, 2026-10-15)
 
-## October 15 update (APPLIED — v2.1 live)
-
-Context & KV-cache upgrade: YaRN factor corrected 4.0→2.0 @ 524,288, fp8_e4m3 KV
-(pooled **1.068M tokens**, 2.03× concurrency — measured), seqs 8→4, PLE mmap dispatch tuning.
-[Changes, measurements, gates, rollback](docs/UPDATE-20261015.md) ·
-[before](config/active-20261014.json) / [after](config/active-20261015.json) configs ·
-[execution log incl. one failed rollout round](docs/EXECUTION-LOG-20261015.md).
-
-## September 26 source update
-
-The default launcher now selects the v0.30 candidate. It keeps the same checkpoint revision, API name/port, 500k context, YaRN factor 4, BF16 cache and two-token drafting. [Changes, upstream measurements, validation status and rollback](docs/UPDATE-20260926.md). No new local speed or quality claim is made.
-
-## September 19 historical update
-
-Installed upstream tool-parser fixes. **30/30 parser regression cases and 6/6 serving checks passed.** Model, context, KV sizing and drafting settings are unchanged. This is a correctness update; no speed gain is claimed. [Details, credits and limitations](docs/PARSER-UPDATE.md).
+| | |
+|---|---|
+| Context / KV pool | 524,288 in · **1,068,740** pool (fp8_e4m3 KV, 2.03× concurrency) |
+| Decode | 40–44 tok/s single-stream (MTP n=2; acceptance 71.7% / 53.9%) |
+| Quality checks | hex-exact retrieval @ 198K tokens · cache coherence exact · swap growth 0 |
+| Warmup | ~165 s |
 
 ## Start here
 
 | Need | Guide |
 |---|---|
-| Build and run | [Setup](docs/SETUP.md) |
-| Latest comparison and decision | [Blazux-default comparison](docs/BLAZUX-DEFAULTS.md) |
-| Exact settings | [Configuration](docs/CONFIGURATION.md), [recipe-v030.json](recipe-v030.json) |
+| **What is actually running (canonical)** | [Configuration](docs/CONFIGURATION.md) · [recipe-current.json](recipe-current.json) |
+| Launch it in one script | [scripts/docker-run-current.sh](scripts/docker-run-current.sh) |
+| Apply/rollback tool | [scripts/qwen38-flash-v2.py](scripts/qwen38-flash-v2.py) |
+| Pinned live snapshots | [active-20261015.json](config/active-20261015.json) (current) · [active-20261014.json](config/active-20261014.json) (previous) |
+| The Oct-15 upgrade (changes, measurements, gates) | [UPDATE-20261015.md](docs/UPDATE-20261015.md) · [execution log](docs/EXECUTION-LOG-20261015.md) |
+| Build & run from source | [Setup](docs/SETUP.md) |
 | Hermes/API connection | [Usage](docs/USAGE.md) |
-| Earlier tests | [Runtime/drafting history](docs/TESTING.md), [PLE comparison](docs/PLE-GATHER.md), [Drowzeys/679k](docs/DROWZEYS-679K.md) |
-| Troubleshooting and terminology | [Troubleshooting](docs/TROUBLESHOOTING.md), [Glossary](docs/GLOSSARY.md) |
+| Terminology / troubleshooting | [Glossary](docs/GLOSSARY.md) · [Troubleshooting](docs/TROUBLESHOOTING.md) |
+| Earlier comparisons | [Blazux-defaults](docs/BLAZUX-DEFAULTS.md) · [testing history](docs/TESTING.md) · [PLE](docs/PLE-GATHER.md) · [Drowzeys/679k](docs/DROWZEYS-679K.md) |
 
-## September 26 candidate configuration
+## Known open items
+- Long-context A/B validating the YaRN factor 4.0→2.0 correction (raw NLL is not comparable
+  across factors — see open items in [UPDATE-20261015.md](docs/UPDATE-20261015.md)).
+- Phase C candidates (batched-tokens 4096, FlashInfer autotune, MTP n=3) unranked pending it.
 
-| Component | Value |
-|---|---|
-| Serving source | Blazux `5108d90dedf15a31aa20432319f151b2fdda17a3`, `Dockerfile.v0.30` |
-| Weights | Drowzeys `a393318fb56d9aedc56d91b6f4962d9af26d2fe7`, locally prepared FP8 hybrid |
-| Maximum total context | **500,000 tokens**, YaRN factor 4 |
-| KV cache | BF16; automatic sizing at utilization **0.80** |
-| Drafting | **2 tokens**, reduced **65,536-token** draft vocabulary |
-| PLE | Disk-backed mmap, worker-pool gathers, prewarming off |
-| Attention / prefix caching | Deterministic top-k enabled; prefix caching enabled |
-| Optional upstream features retained | Persistent compilation caches, Prometheus multiprocess export |
+## Repository layout
+`config/` pinned docker-inspect snapshots · `scripts/` launch + rebuild/rollback tools ·
+`docs/` guides and update records · `benchmark/`, `blazux-comparison/`, `evidence/` test
+fixtures and results (apply only to their recorded configurations) · `upstream*/` pinned
+Blazux source snapshots for reproducibility.
 
-The **historical preview** trial boot reported **19.21 GiB KV / 710,606 cache tokens**. This is not a v0.30 capacity promise; upstream now explains that slow-load swap can inflate automatic sizing. Automatic allocation may differ after another restart; that figure is not the configured request limit. The launcher also preserves upstream-supported effort aliases. Image and weights remain separately pinned.
+Weights are not redistributed; gated access and model-license terms apply separately from
+code licensing. See [sources and licenses](docs/SOURCES.md).
 
-## Historical measured comparison (preview, not v0.30)
-
-| Measurement | Previous custom v0.29 / K3 / 679k | Blazux defaults / K2 / 500k |
-|---|---:|---:|
-| Short scripted checks | 12/12 | 12/12 |
-| Pooled decode, first pass | 42.29 tok/s | 44.79 tok/s (+5.9%) |
-| Pooled decode, second pass | 43.70 tok/s | 46.66 tok/s (+6.8%) |
-| Total short-request time, first pass | 45.58 s | 50.18 s |
-| Total short-request time, second pass | 43.98 s | 43.98 s |
-| 483,011-token retrieval | Correct, 325.74 s, 1 preemption | Correct, 312.89 s, 1 preemption |
-
-Selected by user preference after successful testing. Generation was faster in these samples; complete request latency was mixed. This is a small whole-recipe comparison, not proof of general intelligence parity, a universal speed gain or the benefit of any one setting. Each arm had one start and two short passes. Earlier successful 679k retrieval remains documented, but **679k is not the current limit**.
-
-## Reproduce and audit
-
-```bash
-docker build -f upstream-blazux-v030/Dockerfile.v0.30 -t qwen38-published:20260926-v030 upstream-blazux-v030
-```
-
-Follow [setup](docs/SETUP.md) for model access, pinned download, hybrid conversion and launch. The v0.30 source is published for reproduction; its ARM64 image build and execution with these weights are still pending. Existing benchmark results apply only to their recorded older configurations.
-
-[benchmark/](benchmark/) includes synthetic fixtures and scoring/measurement scripts; [blazux-comparison/](blazux-comparison/) contains saved requests, responses, metrics and grades for both arms. Older [evidence summaries](evidence/) remain available. Historical custom build files remain under [upstream/](upstream/); September 19 source is under [upstream-blazux/](upstream-blazux/); the new unmodified snapshot is under [upstream-blazux-v030/](upstream-blazux-v030/).
-
-Weights are not redistributed. Their gated access and model-license terms apply separately from code licensing. See [sources and licenses](docs/SOURCES.md).
+## History
+September previews (`production.json`, `recipe-v030.json`, the v0.29/679k experiments,
+[UPDATE-20260926.md](docs/UPDATE-20260926.md), [PARSER-UPDATE.md](docs/PARSER-UPDATE.md))
+and the bf16/500K profile superseded on Oct 15 remain in git history for audit; the current
+configuration above supersedes all of them.
