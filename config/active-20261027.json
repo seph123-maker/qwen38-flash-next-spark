@@ -1,0 +1,98 @@
+{
+  "as_of": "2026-10-27T10:55:00+07:00",
+  "engine": "flare",
+  "runtime": {
+    "name": "flare 0.1.0",
+    "source": "https://github.com/NVIDIA/flare-local-inference",
+    "binary": "/root/flare-x-build/target-x/release/flare",
+    "build_commit": "3a6b46f",
+    "build_commit_subject": "Return undeclared MiniMax tool calls under automatic tool choice (#49)",
+    "worktree_state": "clean apart from untracked target-x/ build output",
+    "patched_worktree": {
+      "path": "/root/flare",
+      "commit": "ca1f960",
+      "staged_local_patches": [
+        "ignition/cli/preparation.py: map AutotuneEffort 'default'->'medium', 'audit'->'high' (b12x enum has no 'default' name)",
+        "ignition/preparation/tuning.py: same mapping at RecordedPreparationSession init"
+      ],
+      "pre_pull_backup": "/root/flare-3267 @ 3267c05"
+    }
+  },
+  "model": {
+    "root": "nvidia/Qwen3.8-Flash-Next-FP4-Local",
+    "package": "/root/.cache/flare/packages/models/nvidia_2FQwen3.8-Flash-Next-FP4-Local/gb10-tp1-202610260834",
+    "package_size_gib": 99.4,
+    "deployment": "gb10-tp1",
+    "rank0_files": ["graphs.safetensors", "initial-state-globals.safetensors", "initial-state.safetensors", "kernels.safetensors"],
+    "served_model_name": "qwen3.8-flash-next",
+    "prepared": "2026-10-26",
+    "abliteration": "none on this path (NVIDIA official prepared package); abliterated checkpoint remains in the vLLM parachute"
+  },
+  "service": {
+    "unit": "/etc/systemd/system/flare.service",
+    "installed_copy": "scripts/flare.service",
+    "exec_start": "/root/flare-x-build/target-x/release/flare run /root/.cache/flare/packages/models/nvidia_2FQwen3.8-Flash-Next-FP4-Local/gb10-tp1-202610260834 --host 0.0.0.0 --port 8000 --served-model-name qwen3.8-flash-next --verify-weights",
+    "restart": "always",
+    "restart_sec": 10,
+    "start_limit": "StartLimitIntervalSec=0 / StartLimitBurst=0 (crash loops must not wedge unit into failed)",
+    "timeout_start_sec": 300,
+    "logs": "/root/flare-live.log"
+  },
+  "geometry": {
+    "max_model_len": 262144,
+    "yarn": "none (native window)",
+    "kv_pool_tokens": 2318336,
+    "kv_budget_gib": 31.2,
+    "shared_snapshot_slots": 40,
+    "max_concurrency": 5,
+    "prefill_chunk_size": 4096,
+    "vocab_size": 248320,
+    "input_modalities": ["text", "image"],
+    "output_modalities": ["text"],
+    "max_image_tokens_per_image": 4096,
+    "max_image_pixels": 67108864,
+    "max_image_bytes": 33554432,
+    "image_feature_window_tokens": 16384,
+    "embedding_table_storage": "disk (1024 MiB row cache)"
+  },
+  "sampling": {
+    "defaults": {"seed": 0, "temperature": 1.0, "top_p": 0.95, "top_k": 20, "min_p": 0.0, "repetition_penalty": 1.0, "presence_penalty": 0.0, "frequency_penalty": 0.0},
+    "server_clamps": {"temperature": [0.7, 1.0], "top_p": [0.8, 0.95], "presence_penalty": [0.0, 2.0]},
+    "note": "out-of-range requests are clamped, not rejected"
+  },
+  "host": {
+    "device": "DGX Spark (GB10, aarch64)",
+    "memory_gib": 121,
+    "driver": "580.178.04",
+    "mem_available_gib_at_idle": 7
+  },
+  "boot_trace": {
+    "total_s": 80,
+    "verify_package_signatures_s": 0.1,
+    "verify_stored_data": "99.4 GiB in 44.3 s",
+    "allocate_model_memory": "75.1 GiB GPU, 2.7 s",
+    "load_weights": "72.5 GiB in 8.7 s",
+    "prepare_embedding_tables": "disk, 1024 MiB row cache, 0.2 s",
+    "plan_cache": "78.88 GiB loaded, 31.27 GiB cache budget",
+    "allocate_cache": "31.2 GiB, 2318336 KV tokens, 40 shared snapshot slots, limited by memory, 1.6 s",
+    "tokenizer": "248320 vocabulary",
+    "source": "/root/flare-live.log"
+  },
+  "measured": {
+    "decode_tok_s_sustained_2048_single_stream": 38.5,
+    "sustained_provenance": "2026-10-27 engine A/B vs Transformer-Engine engine (32.1); raw artifacts lost when the watchdog crons were retired; treat as recorded, not reproducible-at-any-hour",
+    "burst_warning": "512-token burst probes measured 49.1 and 12.7 tok/s under different conditions; use 2048-token sustained only",
+    "thinkiness_118k": "0/3 at <=16k budgets (32k budgets behave); 100x short prompts empty 78/100 (model property)",
+    "recheck_required": "sample again with flare_active_requests==0 and flare_free_request_slots==5"
+  },
+  "rollback_layers": [
+    {"layer": "tf_engine", "container": "qwen38-flash-next-tf", "boot_s": 64, "weights": "GUTTED by 2026-10-27 blob sweep - re-download nvidia/Qwen3.8-Flash-Next-FP4-Local before use", "crash_modes": ["zig segfault exit-133", "sticky CUDA-700"]},
+    {"layer": "vllm_parachute", "container": "qwen38-vllm-8000", "recipe": "recipe-current.json", "weights": "NVFP4 fc694b54...-fp8hybrid verified intact", "note": "only path serving the abliterated checkpoint"}
+  ],
+  "policies": [
+    "one heavy workload at a time: stop flare before ComfyUI/H3 video mode and vice versa",
+    "never run eugr b12x on this box (OOM-reboot, eugr issue 388)",
+    "no YaRN - native 262144 only",
+    "endpoint shared with a second Hermes user; benchmark only in verified-idle windows"
+  ]
+}

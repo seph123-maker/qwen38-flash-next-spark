@@ -1,0 +1,27 @@
+# Flare local inference server (qwen3.8-flash-next)
+# Installed as /etc/systemd/system/flare.service ; see docs/UPDATE-20261027-FLARE.md
+[Unit]
+Description=Flare local inference server (qwen3.8-flash-next)
+Documentation=https://github.com/NVIDIA/flare-local-inference
+After=network-online.target
+Wants=network-online.target
+# Sticky crash modes (CUDA-700, device error 6) can loop fast; never wedge
+# into permanent failed state — escalate manually instead.
+StartLimitIntervalSec=0
+StartLimitBurst=0
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/root
+ExecStart=/root/flare-x-build/target-x/release/flare run /root/.cache/flare/packages/models/nvidia_2FQwen3.8-Flash-Next-FP4-Local/gb10-tp1-202610260834 --host 0.0.0.0 --port 8000 --served-model-name qwen3.8-flash-next --verify-weights
+Restart=always
+RestartSec=10
+# Boot takes ~60-90s (45s weight verify + load). Give it room so systemd
+# never SIGTERMs a mid-boot flare and burns restart attempts.
+TimeoutStartSec=300
+StandardOutput=append:/root/flare-live.log
+StandardError=append:/root/flare-live.log
+
+[Install]
+WantedBy=multi-user.target

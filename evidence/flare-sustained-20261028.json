@@ -1,0 +1,38 @@
+{
+  "date": "2026-10-28",
+  "engine": "flare 0.1.0 @ 3a6b46f",
+  "method": "POST /v1/chat/completions, stream=true, stream_options.include_usage, max_tokens=2048, temperature=0.8, top_p=0.9, single stream; decode_tps = completion_tokens / (wall - ttft)",
+  "caveat": "MEASURED UNDER CONTENTION — flare_active_requests was pinned at 1 (a second Hermes user's request decoding concurrently) for the whole run; GPU utilization 96% before and during sampling. This is NOT the idle-window number. The recorded idle figure is 38.5 tok/s (2026-10-27 A/B, 2048-token sustained). benchmark/bench.py's foreign-traffic guard cannot run against Flare (no vllm:* counters), which is why these rows are quarantined here.",
+  "samples": [
+    {
+      "run": 1,
+      "mode": "non-stream, chat_template_kwargs.enable_thinking=false (support unverified)",
+      "prompt_tokens": 48,
+      "completion_tokens": 2048,
+      "wall_s": 74.96,
+      "tok_s_overall": 27.32
+    },
+    {
+      "run": 2,
+      "mode": "stream, include_usage",
+      "active_at_start": 0,
+      "prompt_tokens": 88,
+      "completion_tokens": 2048,
+      "ttft_s": 0.36,
+      "wall_s": 95.88,
+      "decode_tps": 21.44,
+      "overall_tps": 21.36
+    }
+  ],
+  "metrics_snapshot_during_quiet_period": {
+    "flare_active_requests": 1,
+    "flare_free_request_slots": 4,
+    "flare_http_requests_total_chat": 931,
+    "flare_requests_admitted_total": 908,
+    "flare_requests_completed_total": 882,
+    "flare_requests_cancelled_total": 25,
+    "flare_draft_request_rounds_total_rate": "254 rounds / 12 s (~21 r/s) with no local client generating — an external in-flight stream",
+    "note": "admitted-completed gap (26) ≈ cancelled (25) + the one in-flight request; cancelled-but-decoding streams are a plausible steady-state load source on a shared endpoint"
+  },
+  "followup": "re-run inside a verified-idle window (active==0, slots==5) and promote the number to docs/UPDATE-20261027-FLARE.md if it reproduces 38.5"
+}

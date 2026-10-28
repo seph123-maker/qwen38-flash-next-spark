@@ -1,3 +1,15 @@
+# October 27 additions (current serving path)
+
+Since 2026-10-27 the live serving path is [NVIDIA's Flare local inference
+runtime](https://github.com/NVIDIA/flare-local-inference) (binary `3a6b46f`, self-built on
+the box) serving the official prepared [nvidia/Qwen3.8-Flash-Next-FP4-Local](https://huggingface.co/nvidia/Qwen3.8-Flash-Next-FP4-Local)
+package (`gb10-tp1-202610260834`). Credit **NVIDIA** for the runtime and the verified
+prepared package; two local patches to its ignition preparation tooling are pending
+upstream PRs (details in [docs/UPDATE-20261027-FLARE.md](docs/UPDATE-20261027-FLARE.md)).
+The b12x `AutotuneEffort` enum that motivated the patches is [local-inference-lab/b12x](https://github.com/local-inference-lab/b12x) —
+credited, but b12x itself remains **not deployed** (OOM-rebooted this box; eugr issue 388).
+Everything below predates this switch and describes the vLLM lane, kept as the parachute.
+
 # September 26 additions
 
 The v0.30 candidate vendors [Blazux 5108d90](https://github.com/blazux/qwen3.8-Flash-DGX/tree/5108d90dedf15a31aa20432319f151b2fdda17a3) without source modifications. Upstream license and credits are preserved in [the snapshot](upstream-blazux-v030/README.md). Credit **Willian-Zhang** for loading patches 14–18 ([PR 33](https://github.com/blazux/qwen3.8-Flash-DGX/pull/33), [PR 34](https://github.com/blazux/qwen3.8-Flash-DGX/pull/34)), **Blazux** for v0.30 integration and the FP8 KV port, and **Nanetnounou** for the earlier FP8 KV patch credited upstream. FP8 KV is included but remains disabled in our default. The following deployment descriptions and image references are historical.
