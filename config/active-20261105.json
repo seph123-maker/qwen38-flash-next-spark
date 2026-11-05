@@ -1,0 +1,181 @@
+{
+ "as_of": "2026-11-05T17:22:00+07:00",
+ "engine": "flare",
+ "runtime": {
+  "name": "flare 0.1.0",
+  "source": "https://github.com/local-inference-lab/flare-local-inference",
+  "binary": "/root/flare-staging-18b16e1/flare (staged prebuilt; NOT self-built this era)",
+  "binary_sha256": "f03c253792e6194a9349cbcceb4e35da34589573793d9850297acdd8c631a439",
+  "build_commit": "18b16e1",
+  "build_commit_subject": "Prepare clustered BF16 PCIe all-reduce ladders (#174)",
+  "commit_date": "2026-11-03",
+  "engine_distance_from_previous_era": "157 commits (3a6b46f..18b16e1), incl. #167 hard reasoning-token budget, #170 reasoning-token usage reporting, #176 restart-unique request/tool-call IDs",
+  "worktree_state": "prebuilt binary staged; export lane is the /root/flare clone below",
+  "patched_worktree": {
+   "path": "/root/flare",
+   "commit": "18b16e1",
+   "unstaged_local_patches": [
+    "ignition/components/linear.py: revert 2-kwarg transitional call (source_activation, allow_bf16_atomic_reduction removed from the traditional blockscaled.query_from_call; the recipe's own pinned flashinfer 560fef16 does not accept them -> 'unsupported packed BF16 declaration options' at graph-catalog build)"
+   ],
+   "upstream_resolution_note": "upstream realigned recipe+flashinfer instead: 5a1640c re-pins flashinfer to 1f8ed8a3 (query_from_call gains source_activation; guard pops allow_bf16_atomic_reduction) in 0009b89 (2026-11-05). Our revert is the equivalent backport for the 18b16e1 vintage.",
+   "previous_era_stash": "git stash '10-26-autotune-workaround+lock' (obsolete; 18b16e1 absorbs it natively)"
+  }
+ },
+ "model": {
+  "root": "nvidia/Qwen3.8-Flash-Next-FP4-Local",
+  "checkpoint_revision": "b9ce18a6887e18c089fdea8509a33e63429a3300",
+  "package": "/root/.cache/flare/packages/models/nvidia_2FQwen3.8-Flash-Next-FP4-Local/gb10-tp1-202611050945",
+  "package_size_gib": 99.4,
+  "deployment": "gb10-tp1",
+  "rank0_files": [
+   "graphs.safetensors",
+   "initial-state-globals.safetensors",
+   "initial-state.safetensors",
+   "kernels.safetensors"
+  ],
+  "served_model_name": "qwen3.8-flash-next",
+  "prepared": "2026-11-05 (re-export via ignition @ 18b16e1+patch, flashinfer 560fef16, torch 2.14.1+cu132; HF_HOME=/home/mogu/.cache/huggingface)",
+  "export_phases_recorded": [
+   "graph catalog 84/84 in 6.1s",
+   "kernel prep/autotune ~18min (cold compile, ~350 kernels)",
+   "compile forwards + serving graphs ~8min",
+   "export native package ~3.5min (99.4 GiB verify+publish)"
+  ],
+  "contract_note": "the 18b16e1 binary REJECTS the Oct-26 package ('unsupported prepared model contract version'); package vintage must match engine vintage",
+  "chat_template": "native NVIDIA chat_template.jinja + 2 insertions (assets/chat_template.patch.json, source_sha256 c3cf9e34.., result_sha256 5729d2fa..)",
+  "abliteration": "none on this path (NVIDIA official); drowzeys MXFP8 sidecar staged at /root/drowzeys-keys/fp4-local/ (96 tensors, 778,580,792 B, sha256 9b9cf23a120113241b3d...) - graft re-export pending operator go"
+ },
+ "service": {
+  "unit": "/etc/systemd/system/flare.service",
+  "installed_copy": "scripts/flare.service",
+  "exec_start": "/usr/local/bin/flare-current run /usr/local/share/flare-package-current --host 0.0.0.0 --port 8000 --served-model-name qwen3.8-flash-next --verify-weights --embedding-table-storage disk --embedding-table-cache-size 1GiB",
+  "symlink_architecture": {
+   "binary": "/usr/local/bin/flare-current -> /root/flare-staging-18b16e1/flare",
+   "package": "/usr/local/share/flare-package-current -> package above",
+   "rule": "unit never hardcodes paths; links only ever move to preflight-passed rungs"
+  },
+  "restart": "always",
+  "restart_sec": 10,
+  "start_limit": "StartLimitIntervalSec=0 / StartLimitBurst=0",
+  "timeout_start_sec": 300,
+  "logs": "/root/flare-live.log"
+ },
+ "watchdog": {
+  "script": "/usr/local/sbin/flare-brain-watchdog.sh (v5, published at scripts/flare-brain-watchdog.sh)",
+  "timer": "flare-brain-watchdog.timer, 60s tick",
+  "behavior": "probe :8000/v1/models + completion; on N consecutive misses flip BOTH symlinks to last-good and restart; boot grace 300s coupled to TimeoutStartSec; n<=THRESHOLD cap; fail-counter resets on any action",
+  "last_good_markers": {
+   "bin": "/root/flare-releases/last-good-bin",
+   "pkg": "/root/flare-releases/last-good-pkg"
+  }
+ },
+ "geometry": {
+  "max_model_len": 262144,
+  "yarn": "none (native window)",
+  "kv_pool_tokens": 2318336,
+  "kv_budget_gib": 31.2,
+  "shared_snapshot_slots": 40,
+  "max_concurrency": 5,
+  "prefill_chunk_size": 4096,
+  "vocab_size": 248320,
+  "prepare_kernels": 3469,
+  "input_modalities": [
+   "text",
+   "image"
+  ],
+  "output_modalities": [
+   "text"
+  ],
+  "max_image_tokens_per_image": 4096,
+  "max_image_pixels": 67108864,
+  "max_image_bytes": 33554432,
+  "image_feature_window_tokens": 16384,
+  "embedding_table_storage": "disk (1024 MiB row cache)"
+ },
+ "sampling": {
+  "defaults": {
+   "seed": 0,
+   "temperature": 1.0,
+   "top_p": 0.95,
+   "top_k": 20,
+   "min_p": 0.0,
+   "repetition_penalty": 1.0,
+   "presence_penalty": 0.0,
+   "frequency_penalty": 0.0
+  },
+  "server_clamps": {
+   "temperature": [
+    0.7,
+    1.0
+   ],
+   "top_p": [
+    0.8,
+    0.95
+   ],
+   "presence_penalty": [
+    0.0,
+    2.0
+   ]
+  },
+  "note": "out-of-range requests are clamped, not rejected"
+ },
+ "reasoning_effort": {
+  "template_handling": "native template; NO xhigh/medium/low instruction injection (removed vs previous era's custom jinja)",
+  "default": "unset -> non-deterministic empty-completion tail observed on short prompts (thinking consumes the token budget)",
+  "recommended": "explicit reasoning_effort='low' verified deterministic and fast this era; client config sends it"
+ },
+ "host": {
+  "device": "DGX Spark (GB10, aarch64)",
+  "memory_gib": 121,
+  "driver": "580.178.04",
+  "mem_available_gib_at_idle": 7
+ },
+ "boot_trace": {
+  "first_boot_after_export_s": 56,
+  "warm_restart_s": 5,
+  "prepare_kernels": "3469 kernels, 0.5s",
+  "prepare_execution": "concurrency 5, 0.5s",
+  "prepare_embedding_tables": "disk, 1024 MiB row cache, 0.2s",
+  "plan_cache": "78.88 GiB loaded, 31.24 GiB cache budget",
+  "allocate_cache": "31.2 GiB, 2318336 KV tokens, 40 shared snapshot slots, limited by memory, 1.5s",
+  "tokenizer": "248320 token vocabulary",
+  "start_server": "0.0.0.0:8000, 262144 tokens/request, 1.0s"
+ },
+ "measured": {
+  "sustained_decode_tps": {
+   "value": [
+    36.02,
+    37.8
+   ],
+   "method": "2048-token single-stream, stream+include_usage, decode=completion/(wall-ttft), temp 0.8 top_p 0.9",
+   "provenance": "reproducible \u2014 verified-idle samples 2026-11-05 (flare_active_requests==0, flare_free_request_slots==5 at start and end of both runs)",
+   "artifact": "evidence/flare-sustained-20261105.json"
+  },
+  "previous_era_recorded": "38.5 tok/s (2026-10-27 A/B, recorded not artifact) \u2014 treated as noise-band-equal to today's 36-37.8",
+  "functional_probes_2026_11_05": {
+   "math": "correct ('90') in 3.9s @ low",
+   "fact": "correct ('Canberra') in 0.8s @ low",
+   "two_turn_context": "retained",
+   "story_256tok": "7.2s",
+   "provenance": "recorded (smoke-adjacent functional set, not graded)"
+  },
+  "prefix_cache": "hits observed across service restarts (42-57 cached_tokens on repeat probes)"
+ },
+ "rollback_layers": {
+  "previous_flare_era": "/root/flare-releases/oct27-3a6b46f/flare + package gb10-tp1-202610260834 (NOTE: this package is REJECTED by the 18b16e1 binary contract; the rollback rung works only with its own binary era \u2014 the watchdog flips BOTH symlinks together, keeping pair consistency)",
+  "weights": "nvidia/Qwen3.8-Flash-Next-FP4-Local @ b9ce18a6, 96G tree under /home/mogu/.cache/huggingface, 23/23 SHA256 verified 2026-11-05, DO-NOT-DELETE.txt in place",
+  "vllm_parachute": "unchanged (see scripts/docker-run-current.sh); weights re-download still required before first use"
+ },
+ "deliberate_non_adoptions": {
+  "0009b89_recipe_lane": "the Nov-5 main recipe+flashinfer(1f8ed8a3) pair is internally consistent and exports fine, but its package writes a proto field ('method') the 18b16e1 binary rejects ('unrecognized field name'); requires the 0009b89 binary \u2014 no prebuilt exists, Rust build deferred",
+  "6fa01a4_prebuilt": "Nov-1 prebuilt predates #167/#170/#176 \u2014 too old",
+  "mxfp8_lm_head": "downgrades BF16 LM-head precision for ~5% decode \u2014 quality-first veto stands",
+  "yarn_1m": "native 262,144 preferred",
+  "eugr_b12x": "never on this box (OOM-reboot; eugr issue 388)"
+ },
+ "open_items": [
+  "drowzeys graft re-export (abliterated QSA/GDN projections) staged, awaiting operator go",
+  "0009b89 binary via Rust build to test the next-era package/contract",
+  "TF-engine rollback container still needs weights re-download before trusted"
+ ]
+}

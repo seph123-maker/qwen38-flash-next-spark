@@ -1,0 +1,6 @@
+[Unit]
+Description=Flare brain watchdog (probe + TF rollback)
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/flare-brain-watchdog.sh

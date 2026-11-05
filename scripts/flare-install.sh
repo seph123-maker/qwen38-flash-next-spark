@@ -5,7 +5,8 @@
 set -euo pipefail
 
 FLARE_REPO="https://github.com/NVIDIA/flare-local-inference"
-FLARE_COMMIT="${FLARE_COMMIT:-3a6b46f}"          # live serving commit
+FLARE_COMMIT="${FLARE_COMMIT:-18b16e1}"          # live serving commit (Nov-05 era)
+FLARE_PREBUILT="${FLARE_PREBUILT:-/root/flare-staging-18b16e1/flare}"  # prebuilt lane; expected sha256 f03c253792e6194a9349cbcceb4e35da34589573793d9850297acdd8c631a439
 PKG="nvidia/Qwen3.8-Flash-Next-FP4-Local"
 PKG_REV="${PKG_REV:-gb10-tp1-202610260834}"
 PKG_DIR="/root/.cache/flare/packages/models/nvidia_2FQwen3.8-Flash-Next-FP4-Local/${PKG_REV}"

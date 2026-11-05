@@ -1,4 +1,20 @@
-# October 27 additions (current serving path)
+# November 5 additions (current serving path)
+
+Since 2026-11-05 the live serving path is the **prebuilt** [Flare](https://github.com/local-inference-lab/flare-local-inference)
+release binary @ `18b16e1` ("clustered BF16 PCIe all-reduce ladders", #174; sha256
+`f03c2537…a439`) serving a **same-vintage re-export** of the official
+[nvidia/Qwen3.8-Flash-Next-FP4-Local](https://huggingface.co/nvidia/Qwen3.8-Flash-Next-FP4-Local)
+checkpoint (`gb10-tp1-202611050945`, prepared locally with ignition @ `18b16e1` +
+one linear.py backport, flashinfer `560fef16`). Credit **NVIDIA / local-inference-lab**
+for the runtime and its release pipeline (this era needs no self-build);
+credit **[drowzeys](https://huggingface.co/drowzeys)** for the staged (not-yet-live)
+house-answer MXFP8 sidecar documented in [docs/DROWZEYS-679K.md](docs/DROWZEYS-679K.md).
+One local ignition backport is open — the transitional-commit trap and its upstream
+resolution (`5a1640c` → flashinfer `1f8ed8a3` in `0009b89`) are explained in
+[docs/UPDATE-20261105-FLARE.md](docs/UPDATE-20261105-FLARE.md). The Oct-27 era below
+remains accurate as the rollback-rung record.
+
+# October 27 additions (previous era — rollback rung)
 
 Since 2026-10-27 the live serving path is [NVIDIA's Flare local inference
 runtime](https://github.com/NVIDIA/flare-local-inference) (binary `3a6b46f`, self-built on
