@@ -110,7 +110,7 @@
   "rollback_layers": {
     "previous_graft_rung": "package gb10-tp1-202611080129 (18b16e1-vintage prep, local linear.py patch) + 18b16e1 binary",
     "previous_flare_era": "/root/flare-releases/oct27-3a6b46f/flare + package gb10-tp1-202610260834 (18b16e1 binary REJECTS Oct-26 package; watchdog flips BOTH symlinks together)",
-    "vllm_parachute": "container qwen38-flash (abliterated checkpoint, 524K YaRN, historical)"
+    "backup_lane": "qwen3.8-27b on the RTX 3090 (192.168.1.154:8020, hyperqwen-single-1, W4A16-AutoRound + dflash2) — the designated fallback; Spark-side vLLM/TensorFold containers retired 2026-11-08"
   },
   "deliberate_non_adoptions": {
     "91cfb369_binary_swap": "no-op — byte-identical to the Oct-27 binary (sha256 1c5b54b4...); staged at /root/flare-releases/91cfb369/ as evidence only"
@@ -120,7 +120,6 @@
   ],
   "open_items": [
     "0129 rollback rung: re-verify on demand (same sidecar, older prep tree)",
-    "TF-engine rollback container: images healthy 11-06; weights re-verify before trusting",
     "WiFi PSK rotation (host-level, John's action)"
   ],
   "ops_pitfalls": [

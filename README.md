@@ -34,7 +34,7 @@ the Oct-27 era (self-built `3a6b46f`) and the earlier abliterated-vLLM recipe
 | Supervisor (watchdog) | [scripts/flare-brain-watchdog.sh](scripts/flare-brain-watchdog.sh) · [.service](scripts/flare-brain-watchdog.service) · [.timer](scripts/flare-brain-watchdog.timer) |
 | Latest decode sample | [evidence/flare-sustained-20261108-0426.json](evidence/flare-sustained-20261108-0426.json) (0426 live package) · [1744 stock](evidence/flare-sustained-20261108.json) |
 | Previous era (rollback rung) | [UPDATE-20261027-FLARE.md](docs/UPDATE-20261027-FLARE.md) · [active-20261027.json](config/active-20261027.json) |
-| **vLLM parachute** (abliterated checkpoint, 524K/YaRN) | [Configuration](docs/CONFIGURATION.md) · [recipe-current.json](recipe-current.json) · [docker-run-current.sh](scripts/docker-run-current.sh) · [apply/rollback tool](scripts/qwen38-flash-v2.py) |
+| **Backup lane** | qwen3.8-27b on the RTX 3090 (192.168.1.154:8020, `hyperqwen-single-1`, W4A16-AutoRound + dflash2 spec decode) — the designated fallback for the Spark brain; the old vLLM/TensorFold Spark containers were retired 2026-11-08 (files remain in git history) |
 | Oct-15 vLLM upgrade record | [UPDATE-20261015.md](docs/UPDATE-20261015.md) · [execution log](docs/EXECUTION-LOG-20261015.md) |
 | Build & run from source (vLLM lane) | [Setup](docs/SETUP.md) |
 | Hermes/API connection | [Usage](docs/USAGE.md) |
@@ -55,7 +55,8 @@ the Oct-27 era (self-built `3a6b46f`) and the earlier abliterated-vLLM recipe
   the old direction and the prep layer in the new) — so the Nov-05→08 fixes land at the
   **package level only**; a binary swap is a no-op. Staged copy kept at
   `/root/flare-releases/91cfb369/` as evidence.
-- The TF-engine rollback container needs a weights re-download before it can be trusted again.
+- Backup lane: qwen3.8-27b on the 3090 (`:8020`); the Spark-side vLLM/TensorFold
+  containers were retired on 2026-11-08 (containers removed, images pruned).
 - (vLLM lane, dormant) Long-context A/B for the YaRN factor 4.0→2.0 correction; Phase C
   candidates — see [UPDATE-20261015.md](docs/UPDATE-20261015.md).
 
