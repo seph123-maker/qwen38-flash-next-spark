@@ -57,3 +57,52 @@ baked and promoted on 2026-11-08 after John's go-ahead.
   8/8 clean post-boot probes vs the stock build's non-deterministic empty tail.
 - **Source of record:** `/root/grafted-tree-1108` kept on the Spark; the Nov-05
   attempt tree (`grafted-tree-1105`) was removed.
+
+## 91cfb369 grafted-package cutover (later 2026-11-08)
+
+Upstream moved `18b16e1 (Nov-04) → 91cfb369 (Nov-08)` and renamed the repo to
+`NVIDIA/spark-local-inference`. The grafted source-of-record was re-prepared with
+the `91cfb369` tree (`/root/flare-x-build`) and promoted — **no binary change**:
+the live `18b16e1` binary boots the new package.
+
+### What the delta actually contains
+- `git diff 18b16e1..91cfb369`: 294 files, of which **only 2 are in the Rust
+  runtime** (`flare/src/cli.rs`, `flare/src/hardware.rs`); the rest is ignition prep
+  (python), docs, tests, CI. The `91cfb369` source build is **byte-identical to the
+  Oct-27 `3a6b46f` binary** (sha256 `1c5b54b4…`, 21.6 MB) — the Rust runtime is
+  frozen; a binary swap would be a no-op (staged copy kept at
+  `/root/flare-releases/91cfb369/` as evidence).
+- Contract version stays **3** in both directions: `18b16e1` requires `==3`,
+  `91cfb369` accepts `1..=3`; proto additions are additive (field 17: zstd weight
+  catalog). The earlier `0009b89` `method`-field rejection does NOT apply to the
+  `91cfb369` vintage — verified by boot, not by `inspect`.
+- The fixes are baked into the **package** via a new ~950-line `ignition/runtime_patches/`
+  layer (dynamo, functionalization, scheduler, triton, workers) applied at export:
+  streamed-response liveness when clients pause, `ignore_eos` consulted at the
+  output limit, nondeterministic SM103 (=GB10) mHC prefill projection fixed, both
+  private draft pages preserved in shifted prefix checkpoints, complete-copy
+  ordering (MTP), and the **upstream flashinfer pin `6b867fdb`** with a redesigned
+  `linear.py` — which retires our local 2-kwarg `linear.py` backport for this era.
+
+### Verification (all 2026-11-08, this box)
+- Export from `/root/grafted-tree-1108/snapshots/house` with the `91cfb369` tree →
+  package `gb10-tp1-202611080426` (~25 min cold-cache; the kernel-type set grows
+  35→48 across autotune passes — long, but not hung).
+- Booted on `:8001` with the **unchanged** `18b16e1` binary: signature verify OK,
+  health 200, 262,144 ctx.
+- Gate battery: 18/18 non-empty at default effort; GSM8K/math/two-turn/JSON all
+  correct; prefix cache 30–45 ct; gate-server decode 38.75/40.00 t/s.
+- Tight budgets: `max_tokens=16` 3/3 empty (preamble exceeds budget), `32` **6/6
+  clean**, `64` 6/6 clean — strictly better than `0129` (2/10 empty at 32).
+- Live `:8000` after cutover: health 200; verified-idle sustained decode
+  **37.62/37.68 t/s** ([artifact](../evidence/flare-sustained-20261108-0426.json)) —
+  same band as stock `1744` (37.55/40.78).
+- Rollback rung updated to the pair being replaced: `18b16e1` + grafted `0129`
+  (stock `1744` remains the next rung down).
+
+### Ops pitfalls learned
+- `pgrep -f 'ignition export'` matches the `nohup` **bash wrapper** first — its
+  0-jiffy samples are not a hang signal. Check the real python PID
+  (`/proc/<pid>/stat` jiffies delta, `wchan`).
+- `pkill -f` with a pattern present in the SSH command line kills the session
+  (exit 255); use the `[c]` character-class trick.

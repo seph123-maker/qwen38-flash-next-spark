@@ -1,57 +1,59 @@
 {
-  "as_of": "2026-11-08T08:50:00+07:00 (graft cutover; supersedes the 07:00 stock-package snapshot)",
+  "as_of": "2026-11-08T11:40:00+07:00 (91cfb369 grafted-package cutover; supersedes the 08:50 graft-cutover snapshot, which is now the rollback rung)",
   "engine": "flare",
   "supersedes": "config/active-20261105.json (package gb10-tp1-202611050945 no longer exists on disk)",
   "runtime": {
     "name": "flare 0.1.0",
-    "source": "https://github.com/local-inference-lab/flare-local-inference",
-    "binary": "/root/flare-staging-18b16e1/flare (staged prebuilt @ 18b16e1; NOT self-built this era)",
+    "source": "https://github.com/NVIDIA/spark-local-inference (renamed from local-inference-lab/flare-local-inference)",
+    "binary": "/root/flare-staging-18b16e1/flare (staged prebuilt @ 18b16e1; UNCHANGED by this cutover — the 91cfb369 binary is byte-identical to the Oct-27 3a6b46f build, see evidence note)",
     "symlinks": {
       "binary": "/usr/local/bin/flare-current -> /root/flare-staging-18b16e1/flare",
-      "package": "/usr/local/share/flare-package-current -> /root/.cache/flare/packages/models/house/gb10-tp1-202611051744"
-    }
+      "package": "/usr/local/share/flare-package-current -> /root/.cache/flare/packages/models/house/gb10-tp1-202611080426"
+    },
+    "upstream_delta_finding": "git diff 18b16e1..91cfb369: the flare/ Rust crate changed in only 2 files (cli.rs, hardware.rs) in that direction; a source build of 91cfb369 produced sha256 1c5b54b4... == the Oct-27 3a6b46f binary (21.6 MB) — NOT the 18b16e1 prebuilt (f03c2537..., 25.8 MB). The Rust runtime is effectively frozen; all Nov-05→08 fixes live in the ignition prep layer and are baked into the package at export time. Contract version stays 3 in both directions (18b16e1 requires ==3; 91cfb369 accepts 1-3), and the 18b16e1 binary boots a 91cfb369-vintage package (verified 2026-11-08, gate server :8001)."
   },
   "model": {
     "root": "nvidia/Qwen3.8-Flash-Next-FP4-Local",
     "checkpoint_revision": "b9ce18a6887e18c089fdea8509a33e63429a3300",
-    "package": "gb10-tp1-202611080129 (GRAFTED re-export: drowzeys QSA/GDN MXFP8 sidecar, 96 tensors = 12 QSA o_proj + 36 GDN out_proj, baked into the 1744-vintage tree; supersedes stock gb10-tp1-202611051744)",
+    "package": "gb10-tp1-202611080426 (91cfb369-VINTAGE grafted re-export: same drowzeys sidecar as 0129, prepared with the 91cfb369 tree — clean upstream linear.py, flashinfer pinned 6b867fdb, no local patch; supersedes grafted 0129)",
     "package_size_gib": 100,
     "graft": {
       "sidecar": "drowzeys/Qwen3.8-Flash-Next-FP4-Local-house-answer on HF; house-answer-qsa-gdn-mxfp8.safetensors (778,580,792 B, sha256 9b9cf23a120113241b3d9b485cd868f160a54eb483e2a5b8f982f4579e6b6950) + HOUSE_ANSWER_MXFP8.json + graft.py",
-      "source_tree": "/root/grafted-tree-1108/snapshots/house (kept as source-of-record; stale dupes of the 96 grafted keys stripped from model-00001-of-00021.safetensors \u2014 byte-verified 8644/8644 identical)",
-      "gates_passed_20261108": [
-        "geometry identical to stock (262,144 / c32 / 4,096 / 248,320 / mtp 1-6)",
-        "empty-answer battery: 0/6 across 3 runs (18/18 non-empty) at DEFAULT effort \u2014 the defect the sidecar exists to remove",
+      "source_tree": "/root/grafted-tree-1108/snapshots/house (source-of-record, unchanged; both 0129 and 0426 were prepared from it)",
+      "prep_trees": {
+        "0129": "/root/flare (18b16e1; local linear.py 2-kwarg backport, flashinfer 560fef16) — now the rollback rung's prep lane",
+        "0426": "/root/flare-x-build (91cfb369; upstream linear.py, flashinfer 6b867fdb, no local patch)"
+      },
+      "gates_passed_20261108_0426": [
+        "package accepted by the UNCHANGED 18b16e1 binary: signature verify OK, boots, health 200 (contract version 3 both sides)",
+        "geometry identical to stock (262,144 / c32 / 4,096 / 248,320 / MTP 1-6)",
+        "empty-answer battery: 0/6 across 3 runs (18/18 non-empty) at DEFAULT effort — the defect the sidecar exists to remove",
+        "tight-budget probes: max_tokens=16 3/3 empty (preamble exceeds budget — not the empty-tail bug), max_tokens=32 6/6 clean, max_tokens=64 6/6 clean (0129 had 2/10 empty at 32)",
         "GSM8K-style + math + two-turn + JSON tool-call: all correct",
-        "prefix cache: cached_tokens 30-66 on repeated probes",
-        "sustained decode (2048-tok, verified-idle): 36.18 / 39.02 t/s \u2014 inside the stock band"
+        "prefix cache: cached_tokens 30-45 on repeated probes",
+        "sustained decode (2048-tok, verified-idle, live :8000): 37.62 / 37.68 t/s — same band as stock 1744 (37.55/40.78)"
       ],
-      "residual": "with a tight max_tokens=32 budget, 2 of ~10 fresh-boot probes returned empty content at default effort; unlimited-budget default-effort probes 8/8 clean. Send reasoning_effort=low for budget-constrained short prompts."
+      "residual": "sub-16-token budgets can still return empty content at any effort (thinking preamble > budget); use max_tokens>=32 or reasoning_effort=low for tight short prompts."
     }
   },
   "service": {
     "unit": "/etc/systemd/system/flare.service",
     "installed_copy": "scripts/flare.service",
     "exec_start": "/usr/local/bin/flare-current run /usr/local/share/flare-package-current --host 0.0.0.0 --port 8000 --served-model-name qwen3.8-flash-next --verify-weights --embedding-table-storage disk --embedding-table-cache-size 1GiB",
-    "diff_vs_20261105_snapshot": "ExecStart unchanged; package symlink target advanced 0945 -> 1744"
+    "diff_vs_20261105_snapshot": "ExecStart unchanged; package symlink target 0945 -> 0426 (via 1744, 0129)"
   },
   "geometry": {
     "max_model_len": 262144,
     "yarn": "none (native window)",
     "kv_pool_tokens": 1855488,
-    "kv_pool_note": "BOOT-VARIABLE, 'limited by memory' \u2014 observed 1,921,024 and 1,855,488 on two boots; read the live boot trace, not this field",
+    "kv_pool_note": "BOOT-VARIABLE, 'limited by memory' — observed 1,921,024 and 1,855,488 on two boots; read the live boot trace, not this field",
     "kv_budget_gib": 28.2,
     "shared_snapshot_slots": 202,
     "max_concurrency": 32,
     "prefill_chunk_size": 4096,
     "vocab_size": 248320,
-    "input_modalities": [
-      "text",
-      "image"
-    ],
-    "output_modalities": [
-      "text"
-    ],
+    "input_modalities": ["text", "image"],
+    "output_modalities": ["text"],
     "max_image_tokens_per_image": 4096,
     "embedding_table_storage": "disk (1024 MiB row cache)"
   },
@@ -67,43 +69,36 @@
       "frequency_penalty": 0.0
     },
     "server_clamps": {
-      "temperature": [
-        0.7,
-        1.0
-      ],
-      "top_p": [
-        0.8,
-        0.95
-      ]
+      "temperature": [0.7, 1.0],
+      "top_p": [0.8, 0.95]
     }
   },
   "reasoning_effort": {
     "template_handling": "native template; NO effort injection",
-    "default": "unset -> non-deterministic empty-answer tail on short prompts",
-    "recommended": "reasoning_effort: 'low' (deterministic)"
+    "default": "non-deterministic empty tail removed by the graft (18/18 clean at default effort); only sub-16-token budgets still empty",
+    "recommended": "reasoning_effort: 'low' for budget-constrained short prompts"
   },
   "measured": {
     "sustained_decode_tps": {
-      "value": [
-        37.55,
-        40.78
-      ],
+      "value": [37.62, 37.68],
       "method": "2048-token single-stream, stream+include_usage, decode=completion/(wall-ttft), temp 0.8 top_p 0.9",
-      "provenance": "reproducible \u2014 verified-idle samples 2026-11-08 (active==0, free_slots==max at start and end of both runs)",
-      "artifact": "evidence/flare-sustained-20261108.json"
+      "provenance": "reproducible — verified-idle samples 2026-11-08 on the live 0426 package (active==0, free_slots==max at start and end of both runs)",
+      "artifact": "evidence/flare-sustained-20261108-0426.json"
     },
     "history": [
       "36.0-37.8 (2026-11-05, gb10-tp1-202611050945 era)",
-      "38.5 recorded (2026-10-27, 3a6b46f era)"
+      "38.5 recorded (2026-10-27, 3a6b46f era)",
+      "37.55/40.78 (2026-11-08, stock 1744; artifact evidence/flare-sustained-20261108.json)",
+      "36.18/39.02 (2026-11-08, grafted 0129, gate battery)"
     ]
   },
   "watchdog": {
     "script": "/usr/local/sbin/flare-brain-watchdog.sh (v5)",
     "timer": "flare-brain-watchdog.timer, 60s tick",
     "last_good_rungs": {
-      "binary_file": "/root/flare-releases/last-good -> /root/flare-staging-18b16e1/flare (updated at graft cutover: verified-working pair)",
-      "package_file": "/root/flare-releases/last-good-pkg -> /root/.cache/flare/packages/models/house/gb10-tp1-202611051744 (STOCK 1744 \u2014 the rollback rung)",
-      "note": "serving symlink -> grafted 1108; watchdog rolls back to stock 1744 + 18b16e1 on sustained misses"
+      "binary_file": "/root/flare-releases/last-good -> /root/flare-staging-18b16e1/flare (unchanged)",
+      "package_file": "/root/flare-releases/last-good-pkg -> /root/.cache/flare/packages/models/house/gb10-tp1-202611080129 (grafted 0129 — the rollback rung, set at this cutover)",
+      "note": "serving symlink -> 0426; watchdog rolls back to 0129 + 18b16e1 on sustained misses; stock 1744 remains the next rung down"
     }
   },
   "host": {
@@ -113,18 +108,24 @@
     "mem_available_gib_at_idle": 7
   },
   "rollback_layers": {
+    "previous_graft_rung": "package gb10-tp1-202611080129 (18b16e1-vintage prep, local linear.py patch) + 18b16e1 binary",
     "previous_flare_era": "/root/flare-releases/oct27-3a6b46f/flare + package gb10-tp1-202610260834 (18b16e1 binary REJECTS Oct-26 package; watchdog flips BOTH symlinks together)",
     "vllm_parachute": "container qwen38-flash (abliterated checkpoint, 524K YaRN, historical)"
   },
   "deliberate_non_adoptions": {
-    "0009b89_recipe_lane": "next-era recipe writes proto field 'method' the 18b16e1 binary rejects; needs the 0009b89 binary (Rust build, no prebuilt)"
+    "91cfb369_binary_swap": "no-op — byte-identical to the Oct-27 binary (sha256 1c5b54b4...); staged at /root/flare-releases/91cfb369/ as evidence only"
   },
   "local_modifications": [
-    "ignition/components/linear.py (staged): 2-kwarg revert vs pinned flashinfer 560fef16"
+    "(none in the 0426 prep lane — 91cfb369 tree is clean; /root/flare still carries the 18b16e1-era linear.py 2-kwarg backport for that lane)"
   ],
   "open_items": [
-    "0009b89 binary via Rust build to test next-era contract",
+    "0129 rollback rung: re-verify on demand (same sidecar, older prep tree)",
     "TF-engine rollback container: images healthy 11-06; weights re-verify before trusting",
     "WiFi PSK rotation (host-level, John's action)"
+  ],
+  "ops_pitfalls": [
+    "A 91cfb369-era export with a COLD kernel cache took ~25 min (kernel-type set expands 35->48 across autotune passes; 'Compile model forwards' + 'Warm compiled forwards' are long). The first attempt was killed on a premature hang call: the monitored process was the bash wrapper (0 jiffies) — check the real python PID's /proc jiffies before declaring a hang. The second attempt completed; the warm-cache compile phase was 82.9s.",
+    "pkill/pgrep -f with a pattern that also appears in the SSH command line kills the session (255). Use the [c]haracter-class trick.",
+    "Gate battery: /root/gate-battery-1108.py (targets :8001)."
   ]
 }
