@@ -3,7 +3,7 @@
 The recipe for running Qwen3.8-Flash-Next on a single GB10 (DGX Spark). **Since
 2026-11-05 the live serving path is [NVIDIA Flare](https://github.com/local-inference-lab/flare-local-inference)
 prebuilt @ `18b16e1` (157 commits newer)** serving a same-vintage re-export of NVIDIA's
-FP4-Local package at native **262,144-token context with a ~1.86M-token boot-variable KV pool**,
+FP4-Local package — **since 2026-11-08 the drowzeys QSA/GDN sidecar grafted in** (the empty-answer fix) — at native **262,144-token context with a ~1.86M-token boot-variable KV pool**,
 text+image in, dual-symlink last-good deployment with a watchdog. The Oct-27 era
 (self-built `3a6b46f`) is the **rollback rung**; the earlier abliterated-vLLM recipe
 (524K via YaRN, 1.07M-token pool) is the **parachute** and historical record.
@@ -15,7 +15,7 @@ text+image in, dual-symlink last-good deployment with a watchdog. The Oct-27 era
 |---|---|
 | Runtime | Flare 0.1.0, **prebuilt** @ `18b16e1` (2026-11-03), systemd, `--verify-weights` every boot, sha256-pinned staging |
 | Context / KV pool | 262,144 native (no YaRN) · **~1.86M** pool (boot-variable) · ~202 snapshot slots · **c32** |
-| Decode | **37.6–40.8 tok/s** sustained (2048-token single stream, verified-idle 2026-11-08, [artifact](evidence/flare-sustained-20261108.json)); earlier eras 36.0–38.5 — noise-band-equal |
+| Decode | **36.2–40.8 tok/s** sustained (2048-token single stream, verified-idle 2026-11-08, [artifact](evidence/flare-sustained-20261108.json)); grafted build 36.2/39.0 same day — inside the same band |
 | Modalities | text + image in (≤4,096 tok/image), text out |
 | Boot | ~56 s first boot after export, **~5 s warm restart** |
 | Sampling | server-clamped: temp ∈ [0.7, 1.0], top_p ∈ [0.80, 0.95], top_k 20 |

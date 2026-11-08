@@ -1,5 +1,5 @@
 {
-  "as_of": "2026-11-08T07:00:00+07:00",
+  "as_of": "2026-11-08T08:50:00+07:00 (graft cutover; supersedes the 07:00 stock-package snapshot)",
   "engine": "flare",
   "supersedes": "config/active-20261105.json (package gb10-tp1-202611050945 no longer exists on disk)",
   "runtime": {
@@ -14,8 +14,20 @@
   "model": {
     "root": "nvidia/Qwen3.8-Flash-Next-FP4-Local",
     "checkpoint_revision": "b9ce18a6887e18c089fdea8509a33e63429a3300",
-    "package": "gb10-tp1-202611051744 (re-exported Nov-06 00:48 +0700 @ recipe 18b16e1 + local linear.py backport; supersedes gb10-tp1-202611050945)",
-    "package_size_gib": 100
+    "package": "gb10-tp1-202611080129 (GRAFTED re-export: drowzeys QSA/GDN MXFP8 sidecar, 96 tensors = 12 QSA o_proj + 36 GDN out_proj, baked into the 1744-vintage tree; supersedes stock gb10-tp1-202611051744)",
+    "package_size_gib": 100,
+    "graft": {
+      "sidecar": "drowzeys/Qwen3.8-Flash-Next-FP4-Local-house-answer on HF; house-answer-qsa-gdn-mxfp8.safetensors (778,580,792 B, sha256 9b9cf23a120113241b3d9b485cd868f160a54eb483e2a5b8f982f4579e6b6950) + HOUSE_ANSWER_MXFP8.json + graft.py",
+      "source_tree": "/root/grafted-tree-1108/snapshots/house (kept as source-of-record; stale dupes of the 96 grafted keys stripped from model-00001-of-00021.safetensors \u2014 byte-verified 8644/8644 identical)",
+      "gates_passed_20261108": [
+        "geometry identical to stock (262,144 / c32 / 4,096 / 248,320 / mtp 1-6)",
+        "empty-answer battery: 0/6 across 3 runs (18/18 non-empty) at DEFAULT effort \u2014 the defect the sidecar exists to remove",
+        "GSM8K-style + math + two-turn + JSON tool-call: all correct",
+        "prefix cache: cached_tokens 30-66 on repeated probes",
+        "sustained decode (2048-tok, verified-idle): 36.18 / 39.02 t/s \u2014 inside the stock band"
+      ],
+      "residual": "with a tight max_tokens=32 budget, 2 of ~10 fresh-boot probes returned empty content at default effort; unlimited-budget default-effort probes 8/8 clean. Send reasoning_effort=low for budget-constrained short prompts."
+    }
   },
   "service": {
     "unit": "/etc/systemd/system/flare.service",
@@ -89,9 +101,9 @@
     "script": "/usr/local/sbin/flare-brain-watchdog.sh (v5)",
     "timer": "flare-brain-watchdog.timer, 60s tick",
     "last_good_rungs": {
-      "binary_file": "/root/flare-releases/last-good -> /root/flare-releases/oct27-3a6b46f/flare",
-      "package_file": "/root/flare-releases/last-good-pkg -> /root/.cache/flare/packages/models/house/gb10-tp1-202611051744",
-      "pair_integrity": "cross-vintage pair (Oct-27 binary + Nov-06 package); BOTH inspected rc=0 on 2026-11-08 \u2014 verified, not inherited"
+      "binary_file": "/root/flare-releases/last-good -> /root/flare-staging-18b16e1/flare (updated at graft cutover: verified-working pair)",
+      "package_file": "/root/flare-releases/last-good-pkg -> /root/.cache/flare/packages/models/house/gb10-tp1-202611051744 (STOCK 1744 \u2014 the rollback rung)",
+      "note": "serving symlink -> grafted 1108; watchdog rolls back to stock 1744 + 18b16e1 on sustained misses"
     }
   },
   "host": {
@@ -111,8 +123,8 @@
     "ignition/components/linear.py (staged): 2-kwarg revert vs pinned flashinfer 560fef16"
   ],
   "open_items": [
-    "drowzeys graft re-export staged, awaiting operator go",
     "0009b89 binary via Rust build to test next-era contract",
-    "WiFi PSK rotation (host-level, tracked separately)"
+    "TF-engine rollback container: images healthy 11-06; weights re-verify before trusting",
+    "WiFi PSK rotation (host-level, John's action)"
   ]
 }

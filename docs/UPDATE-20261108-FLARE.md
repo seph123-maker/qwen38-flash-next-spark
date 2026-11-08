@@ -36,3 +36,24 @@ package only.
 ## Open items
 - drowzeys graft re-export staged, awaiting operator go.
 - 0009b89 binary via Rust build to test the next-era contract.
+
+## Graft cutover (later 2026-11-08)
+
+The drowzeys QSA/GDN sidecar — staged since Nov-05, awaiting operator go — was
+baked and promoted on 2026-11-08 after John's go-ahead.
+
+- **Why the re-export was needed:** `flare` rejects any tensor name present in two
+  files, and the index must agree with the file that physically holds each tensor.
+  The sidecar's 96 keys still existed as stock copies inside
+  `model-00001-of-00021.safetensors`, so the snapshot had to be re-cut: the 96
+  stale copies were stripped from that one shard (all 96 lived in it), byte-verified
+  8644/8644 against stock, then prepared with the same `/root/flare` tree that
+  built 1744 (local `linear.py` patch, flashinfer `560fef16`).
+- **Result:** package `gb10-tp1-202611080129`, geometry identical to stock
+  (262,144 / c32 / 4,096 / 248,320 / MTP 1-6), gate battery passed (see
+  `config/active-20261108.json: model.graft`). Promoted via two-symlink flip;
+  last-good updated to the verified pair (18b16e1 + stock 1744).
+- **Effect:** default-effort short prompts no longer burn the budget on thinking —
+  8/8 clean post-boot probes vs the stock build's non-deterministic empty tail.
+- **Source of record:** `/root/grafted-tree-1108` kept on the Spark; the Nov-05
+  attempt tree (`grafted-tree-1105`) was removed.
