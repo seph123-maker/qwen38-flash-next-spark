@@ -3,7 +3,7 @@
 The recipe for running Qwen3.8-Flash-Next on a single GB10 (DGX Spark). **Since
 2026-11-05 the live serving path is [NVIDIA Flare](https://github.com/local-inference-lab/flare-local-inference)
 prebuilt @ `18b16e1` (157 commits newer)** serving a same-vintage re-export of NVIDIA's
-FP4-Local package at native **262,144-token context with a 2,318,336-token KV pool**,
+FP4-Local package at native **262,144-token context with a ~1.86M-token boot-variable KV pool**,
 text+image in, dual-symlink last-good deployment with a watchdog. The Oct-27 era
 (self-built `3a6b46f`) is the **rollback rung**; the earlier abliterated-vLLM recipe
 (524K via YaRN, 1.07M-token pool) is the **parachute** and historical record.
@@ -14,8 +14,8 @@ text+image in, dual-symlink last-good deployment with a watchdog. The Oct-27 era
 | | |
 |---|---|
 | Runtime | Flare 0.1.0, **prebuilt** @ `18b16e1` (2026-11-03), systemd, `--verify-weights` every boot, sha256-pinned staging |
-| Context / KV pool | 262,144 native (no YaRN) · **2,318,336** pool · 40 snapshot slots · c5 |
-| Decode | **36.0–37.8 tok/s** sustained (2048-token single stream, verified-idle 2026-11-05, [artifact](evidence/flare-sustained-20261105.json)); previous era recorded 38.5 — noise-band-equal |
+| Context / KV pool | 262,144 native (no YaRN) · **~1.86M** pool (boot-variable) · ~202 snapshot slots · **c32** |
+| Decode | **37.6–40.8 tok/s** sustained (2048-token single stream, verified-idle 2026-11-08, [artifact](evidence/flare-sustained-20261108.json)); earlier eras 36.0–38.5 — noise-band-equal |
 | Modalities | text + image in (≤4,096 tok/image), text out |
 | Boot | ~56 s first boot after export, **~5 s warm restart** |
 | Sampling | server-clamped: temp ∈ [0.7, 1.0], top_p ∈ [0.80, 0.95], top_k 20 |
@@ -25,10 +25,10 @@ text+image in, dual-symlink last-good deployment with a watchdog. The Oct-27 era
 
 | Need | Guide |
 |---|---|
-| **What is actually running (canonical)** | [UPDATE-20261105-FLARE.md](docs/UPDATE-20261105-FLARE.md) · [active-20261105.json](config/active-20261105.json) |
+| **What is actually running (canonical)** | [UPDATE-20261108-FLARE.md](docs/UPDATE-20261108-FLARE.md) · [active-20261108.json](config/active-20261108.json) |
 | Launch it in one script | [scripts/flare-install.sh](scripts/flare-install.sh) · [scripts/flare.service](scripts/flare.service) |
 | Supervisor (watchdog) | [scripts/flare-brain-watchdog.sh](scripts/flare-brain-watchdog.sh) · [.service](scripts/flare-brain-watchdog.service) · [.timer](scripts/flare-brain-watchdog.timer) |
-| Latest decode sample | [evidence/flare-sustained-20261105.json](evidence/flare-sustained-20261105.json) |
+| Latest decode sample | [evidence/flare-sustained-20261108.json](evidence/flare-sustained-20261108.json) |
 | Previous era (rollback rung) | [UPDATE-20261027-FLARE.md](docs/UPDATE-20261027-FLARE.md) · [active-20261027.json](config/active-20261027.json) |
 | **vLLM parachute** (abliterated checkpoint, 524K/YaRN) | [Configuration](docs/CONFIGURATION.md) · [recipe-current.json](recipe-current.json) · [docker-run-current.sh](scripts/docker-run-current.sh) · [apply/rollback tool](scripts/qwen38-flash-v2.py) |
 | Oct-15 vLLM upgrade record | [UPDATE-20261015.md](docs/UPDATE-20261015.md) · [execution log](docs/EXECUTION-LOG-20261015.md) |
@@ -43,7 +43,7 @@ text+image in, dual-symlink last-good deployment with a watchdog. The Oct-27 era
   together — the dual-symlink + last-good design enforces this. Never mix rungs manually.
 - One local ignition backport keeps the `18b16e1` export lane working (flashinfer
   transitional-commit trap, explained in
-  [UPDATE-20261105-FLARE.md](docs/UPDATE-20261105-FLARE.md)); upstream `0009b89` resolved
+  [UPDATE-20261108-FLARE.md](docs/UPDATE-20261108-FLARE.md)); upstream `0009b89` resolved
   it by re-pinning flashinfer, but its prebuilt binary doesn't exist yet (Rust build open).
 - Abliterated graft (drowzeys sidecar) is **staged, not live** — gated re-export awaiting
   go ([gates](docs/UPDATE-20261105-FLARE.md#re-export--graft-gates-the-gate-table-lives-after-the-warning)).

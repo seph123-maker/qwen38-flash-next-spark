@@ -1,3 +1,10 @@
+## 2026-11-08 — package re-export layer (1744)
+
+- Live truth re-derived from the box 2026-11-08 (symlinks, unit, /v1/models, boot trace, both-rung `inspect`).
+- Sustained decode re-measured on the `1744` package: 37.55 / 40.78 tok/s, verified-idle.
+- Bench idle-gate corrected to self-derive `max_concurrency` (was hard-coded 5 from the c5 era).
+- `docs/UPDATE-20261105-FLARE.md` and `config/active-20261105.json` retained as history.
+
 # November 5 additions (current serving path)
 
 Since 2026-11-05 the live serving path is the **prebuilt** [Flare](https://github.com/local-inference-lab/flare-local-inference)

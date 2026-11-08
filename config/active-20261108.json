@@ -1,0 +1,118 @@
+{
+  "as_of": "2026-11-08T07:00:00+07:00",
+  "engine": "flare",
+  "supersedes": "config/active-20261105.json (package gb10-tp1-202611050945 no longer exists on disk)",
+  "runtime": {
+    "name": "flare 0.1.0",
+    "source": "https://github.com/local-inference-lab/flare-local-inference",
+    "binary": "/root/flare-staging-18b16e1/flare (staged prebuilt @ 18b16e1; NOT self-built this era)",
+    "symlinks": {
+      "binary": "/usr/local/bin/flare-current -> /root/flare-staging-18b16e1/flare",
+      "package": "/usr/local/share/flare-package-current -> /root/.cache/flare/packages/models/house/gb10-tp1-202611051744"
+    }
+  },
+  "model": {
+    "root": "nvidia/Qwen3.8-Flash-Next-FP4-Local",
+    "checkpoint_revision": "b9ce18a6887e18c089fdea8509a33e63429a3300",
+    "package": "gb10-tp1-202611051744 (re-exported Nov-06 00:48 +0700 @ recipe 18b16e1 + local linear.py backport; supersedes gb10-tp1-202611050945)",
+    "package_size_gib": 100
+  },
+  "service": {
+    "unit": "/etc/systemd/system/flare.service",
+    "installed_copy": "scripts/flare.service",
+    "exec_start": "/usr/local/bin/flare-current run /usr/local/share/flare-package-current --host 0.0.0.0 --port 8000 --served-model-name qwen3.8-flash-next --verify-weights --embedding-table-storage disk --embedding-table-cache-size 1GiB",
+    "diff_vs_20261105_snapshot": "ExecStart unchanged; package symlink target advanced 0945 -> 1744"
+  },
+  "geometry": {
+    "max_model_len": 262144,
+    "yarn": "none (native window)",
+    "kv_pool_tokens": 1855488,
+    "kv_pool_note": "BOOT-VARIABLE, 'limited by memory' \u2014 observed 1,921,024 and 1,855,488 on two boots; read the live boot trace, not this field",
+    "kv_budget_gib": 28.2,
+    "shared_snapshot_slots": 202,
+    "max_concurrency": 32,
+    "prefill_chunk_size": 4096,
+    "vocab_size": 248320,
+    "input_modalities": [
+      "text",
+      "image"
+    ],
+    "output_modalities": [
+      "text"
+    ],
+    "max_image_tokens_per_image": 4096,
+    "embedding_table_storage": "disk (1024 MiB row cache)"
+  },
+  "sampling": {
+    "defaults": {
+      "seed": 0,
+      "temperature": 1.0,
+      "top_p": 0.95,
+      "top_k": 20,
+      "min_p": 0.0,
+      "repetition_penalty": 1.0,
+      "presence_penalty": 0.0,
+      "frequency_penalty": 0.0
+    },
+    "server_clamps": {
+      "temperature": [
+        0.7,
+        1.0
+      ],
+      "top_p": [
+        0.8,
+        0.95
+      ]
+    }
+  },
+  "reasoning_effort": {
+    "template_handling": "native template; NO effort injection",
+    "default": "unset -> non-deterministic empty-answer tail on short prompts",
+    "recommended": "reasoning_effort: 'low' (deterministic)"
+  },
+  "measured": {
+    "sustained_decode_tps": {
+      "value": [
+        37.55,
+        40.78
+      ],
+      "method": "2048-token single-stream, stream+include_usage, decode=completion/(wall-ttft), temp 0.8 top_p 0.9",
+      "provenance": "reproducible \u2014 verified-idle samples 2026-11-08 (active==0, free_slots==max at start and end of both runs)",
+      "artifact": "evidence/flare-sustained-20261108.json"
+    },
+    "history": [
+      "36.0-37.8 (2026-11-05, gb10-tp1-202611050945 era)",
+      "38.5 recorded (2026-10-27, 3a6b46f era)"
+    ]
+  },
+  "watchdog": {
+    "script": "/usr/local/sbin/flare-brain-watchdog.sh (v5)",
+    "timer": "flare-brain-watchdog.timer, 60s tick",
+    "last_good_rungs": {
+      "binary_file": "/root/flare-releases/last-good -> /root/flare-releases/oct27-3a6b46f/flare",
+      "package_file": "/root/flare-releases/last-good-pkg -> /root/.cache/flare/packages/models/house/gb10-tp1-202611051744",
+      "pair_integrity": "cross-vintage pair (Oct-27 binary + Nov-06 package); BOTH inspected rc=0 on 2026-11-08 \u2014 verified, not inherited"
+    }
+  },
+  "host": {
+    "device": "DGX Spark (GB10, aarch64)",
+    "memory_gib": 121,
+    "driver": "580.178.04",
+    "mem_available_gib_at_idle": 7
+  },
+  "rollback_layers": {
+    "previous_flare_era": "/root/flare-releases/oct27-3a6b46f/flare + package gb10-tp1-202610260834 (18b16e1 binary REJECTS Oct-26 package; watchdog flips BOTH symlinks together)",
+    "vllm_parachute": "container qwen38-flash (abliterated checkpoint, 524K YaRN, historical)"
+  },
+  "deliberate_non_adoptions": {
+    "0009b89_recipe_lane": "next-era recipe writes proto field 'method' the 18b16e1 binary rejects; needs the 0009b89 binary (Rust build, no prebuilt)"
+  },
+  "local_modifications": [
+    "ignition/components/linear.py (staged): 2-kwarg revert vs pinned flashinfer 560fef16"
+  ],
+  "open_items": [
+    "drowzeys graft re-export staged, awaiting operator go",
+    "0009b89 binary via Rust build to test next-era contract",
+    "WiFi PSK rotation (host-level, tracked separately)"
+  ]
+}
